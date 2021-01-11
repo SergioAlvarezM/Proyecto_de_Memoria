@@ -52,6 +52,10 @@ There is a number of tools that form part of the engine, they are stored as stri
 
 - move_map: Tool that is active when moving the 2D map on the engine.
 
+There are several actions that are not being considered as tools in the program (like the zoom functionality or
+ the reload functionality). This is because they are actions that happens in the moment they are called, and thus, 
+ they don't change the state of the program to the future.
+
 # About the parallel task on the engine
 
 The engine has implemented two main pipelines to delegate tasks to some time in the future, tasks and parallel tasks.
