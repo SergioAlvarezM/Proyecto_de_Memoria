@@ -59,7 +59,7 @@ class LinearInterpolation(Interpolation):
         """
         super().initialize(scene)
 
-        self.__model_vertices = scene.get_map2d_model_vertices_array(self.model_id)
+        self.__model_vertices = scene.get_map2d_model_vertices_array(self.model_id).copy()
         self.__polygon_points = scene.get_polygon_points(self.polygon_id)
 
         if not scene.is_polygon_planar(self.polygon_id):
