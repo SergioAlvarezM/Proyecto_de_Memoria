@@ -11,11 +11,13 @@ package src.engine.scene.interpolation {
     class src.engine.scene.interpolation.LinearInterpolation
     class src.engine.scene.interpolation.NearestInterpolation
     class src.engine.scene.interpolation.CubicInterpolation
+    class src.engine.scene.interpolation.SmoothInterpolation
 }
 
 src.engine.scene.interpolation.LinearInterpolation -u-|> src.engine.scene.interpolation.Interpolation
 src.engine.scene.interpolation.NearestInterpolation -u-|> src.engine.scene.interpolation.Interpolation
 src.engine.scene.interpolation.CubicInterpolation -u-|> src.engine.scene.interpolation.Interpolation
+src.engine.scene.interpolation.SmoothInterpolation -u-|> src.engine.scene.interpolation.Interpolation
 
 !endsub
 
@@ -32,6 +34,9 @@ src.engine.scene.interpolation.CubicInterpolation -u-|> src.engine.scene.interpo
     src.engine.scene.interpolation.CubicInterpolation ..> src.engine.scene.geometrical_operations
     src.engine.scene.interpolation.CubicInterpolation ..> src.utils
     src.engine.scene.interpolation.CubicInterpolation ..> src.error.InterpolationError
+    src.engine.scene.interpolation.SmoothInterpolation ..> src.engine.scene.geometrical_operations
+    src.engine.scene.interpolation.SmoothInterpolation ..> src.utils
+    src.engine.scene.interpolation.SmoothInterpolation ..> src.error.InterpolationError
 !endsub
 
 

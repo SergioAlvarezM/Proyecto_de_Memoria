@@ -187,39 +187,6 @@ class Engine:
         self.program.add_zoom()
         self.scene.update_projection_matrix_2D()
 
-    def apply_smoothing(self, polygon_id: str, model_id: str, distance_to_polygon: float) -> None:
-        """
-        Ask the scene to apply smoothing over the indicated polygon.
-
-        A loading window will appear in the program when realizing the smoothing process on the loaded map.
-
-        NOTE: The smoothing process will not be done in the same frame that this method is called. It will be
-              done roughly 3 frames after this method is called.
-
-        Args:
-            polygon_id: Polygon to use to apply smoothing.
-            model_id: Model to use.
-            distance_to_polygon: Distance to generate the external polygon and the smoothing area.
-
-        Returns: None
-        """
-        if model_id is None:
-            self.set_modal_text('Error', 'Please load a model before smoothing.')
-            return
-
-        if polygon_id is None:
-            self.set_modal_text('Error', 'Please select a polygon to use for the interpolation')
-            return
-
-        if not self.scene.is_polygon_planar(polygon_id):
-            self.set_modal_text('Error', 'Polygon selected is not planar.')
-            return
-
-        self.set_loading_message('Applying smoothing, This may take a while.')
-        self.set_task_with_loading_frame(lambda: self.scene.apply_smoothing_algorithm(polygon_id,
-                                                                                      model_id,
-                                                                                      distance_to_polygon))
-
     def are_frames_fixed(self) -> bool:
         """
         Return if the frames are fixed or not in the application.

@@ -38,7 +38,6 @@ from src.engine.scene.model.model import Model
 from src.engine.scene.model.polygon import Polygon
 from src.engine.scene.model.tranformations.transformations import ortho, perspective
 from src.engine.scene.transformation.transformation import Transformation
-from src.engine.scene.transformation_helper import TransformationHelper
 from src.error.scene_error import SceneError
 from src.program.view_mode import ViewMode
 from src.utils import get_logger
@@ -213,40 +212,6 @@ class Scene:
         log.debug("Added polygon to the scene")
         self.__polygon_hash[polygon.get_id()] = polygon
         self.__polygon_id_count += 1
-
-    def apply_smoothing_algorithm(self, polygon_id, model_id, distance_to_polygon) -> None:
-        """
-        Apply a smoothing algorithm over in the area between the polygon and the external polygon generated
-        using the distance specified.
-
-        Args:
-            polygon_id: id of the polygon to use.
-            model_id: id of the model to use.
-            distance_to_polygon: distance to use to calculate the external polygon.
-
-        Returns: None
-        """
-        polygon = self.__polygon_hash[polygon_id]
-        model = self.__model_hash[model_id]
-
-        polygon_points = polygon.get_point_list()
-        external_polygon_points = get_external_polygon_points(polygon_points,
-                                                              distance_to_polygon)
-
-        vertices_shape = model.get_vertices_shape()
-
-        vertices_model = model.get_vertices_array()
-        vertices_model = vertices_model.reshape(vertices_shape)
-
-        heights_model = model.get_height_array()
-        heights_model = heights_model.reshape(vertices_shape[0:2])
-
-        new_heights = TransformationHelper().apply_smoothing_over_area(polygon_points,
-                                                                       external_polygon_points,
-                                                                       vertices_model,
-                                                                       heights_model)
-
-        model.update_heights(new_heights)
 
     def calculate_map_position_from_window(self,
                                            position_x: int,

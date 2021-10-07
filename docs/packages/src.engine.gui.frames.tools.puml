@@ -38,6 +38,7 @@ src.engine.gui.frames.tools.Tools *-- src.engine.gui.frames.tools.InterpolationT
     src.engine.gui.frames.tools.InterpolationTools ..> src.engine.scene.interpolation.CubicInterpolation
     src.engine.gui.frames.tools.InterpolationTools ..> src.engine.scene.interpolation.NearestInterpolation
     src.engine.gui.frames.tools.InterpolationTools ..> src.engine.scene.interpolation.LinearInterpolation
+    src.engine.gui.frames.tools.InterpolationTools ..> src.engine.scene.interpolation.SmoothInterpolation
 !endsub
 
 hide members

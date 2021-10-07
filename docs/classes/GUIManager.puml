@@ -38,7 +38,6 @@ class GUIManager{
     + add_polygon_to_polygon_folder(folder_id, polygon_id)
     + add_model_to_gui(model_id)
     + add_zoom()
-    + apply_smoothing(polygon_id, model_id, distance_to_polygon)
     + are_frame_fixed()
     + calculate_max_min_height(model_id, polygon_id): tuple
     + change_color_file_with_dialog()
