@@ -27,7 +27,7 @@ from src.input.NetCDF import read_info
 from test.test_case import ProgramTestCase
 
 
-class TestModifyHeight(ProgramTestCase):
+class TestLinearTransformation(ProgramTestCase):
 
     def test_linear_transformation(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
