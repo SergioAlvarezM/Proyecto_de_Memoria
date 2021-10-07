@@ -28,6 +28,7 @@ import OpenGL.constant as OGLConstant
 import numpy as np
 
 from src.engine.scene.camera import Camera
+from src.engine.scene.geometrical_operations import merge_matrices
 from src.engine.scene.model.lines import Lines
 from src.engine.scene.model.map2dmodel import Map2DModel
 from src.engine.scene.model.map3dmodel import Map3DModel
@@ -647,8 +648,8 @@ class Scene:
         base_model_info = self.get_model_information(base_model_id)
         second_model_info = self.get_model_information(second_model_id)
 
-        new_heights = TransformationHelper().merge_matrices(base_model_info["height_array"],
-                                                            second_model_info["height_array"])
+        new_heights = merge_matrices(base_model_info["height_array"],
+                                     second_model_info["height_array"])
 
         self.create_model_from_data_async(path_color_file,
                                           base_model_info['coordinates_array'][0],

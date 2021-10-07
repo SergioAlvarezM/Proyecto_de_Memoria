@@ -96,3 +96,27 @@ def generate_mask(points_array: np.ndarray, polygon_points) -> np.ndarray:
 
     flags = contains(Polygon(points_xy), points_array[:, :, 0], points_array[:, :, 1])
     return flags
+
+
+def merge_matrices(first_matrix: np.ndarray, second_matrix: np.ndarray) -> np.ndarray:
+    """
+    Merge the values of the matrices.
+
+    Set the values of the second matrix on the cells where the first matrix has nan values. Both matrices must
+    be of the same shape.
+
+    The values of the proportioned matrices does not change. A new matrix is generated as result of this method.
+
+    Args:
+        first_matrix: Main matrix to use for the merge.
+        second_matrix: Second matrix to use for the merge.
+
+    Returns: Matrix that use the values of the first matrix and the second matrix.
+    """
+    assert first_matrix.shape == second_matrix.shape, "Matrices are not of the same shape."
+
+    new_matrix = np.zeros(first_matrix.shape)
+    new_matrix[:] = first_matrix[:]
+    new_matrix[np.isnan(first_matrix)] = second_matrix[np.isnan(first_matrix)]
+
+    return new_matrix
