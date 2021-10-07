@@ -21,6 +21,7 @@ Utility module that defines different geometrical operations.
 from typing import List
 
 import numpy as np
+from scipy import interpolate
 from shapely.geometry.polygon import LinearRing as LinearRing, Polygon
 from shapely.vectorized import contains
 
@@ -190,3 +191,60 @@ def get_external_polygon_points(polygon_points: List[float],
         polygon_exterior.append(default_z_value)
 
     return polygon_exterior
+
+
+def interpolate_nan(array_2d: np.ndarray, nan_mask: np.ndarray,
+                    interpolation_type: str = 'linear') -> np.ndarray:
+    """
+    Interpolate the missing values from the array2d using scipy interpolation method.
+
+    Args:
+        array_2d: Array 2D with missing values to interpolate.
+        nan_mask: Array 2D with a mask specifying where are located the nan values.
+        interpolation_type: Type of the interpolation. (nearest, linear, cubic)
+
+    Returns: Array interpolated.
+    """
+    # noinspection PyShadowingNames
+    grid_x, grid_y = np.mgrid[:array_2d.shape[0], :array_2d.shape[1]]
+    data = np.zeros((array_2d.shape[0], array_2d.shape[1], 3))
+    data[:, :, 0] = grid_x
+    data[:, :, 1] = grid_y
+    data[:, :, 2] = array_2d
+
+    # Change shape of the data to an array of points
+    # ----------------------------------------------
+    nan_mask = nan_mask.reshape(-1)
+    data = data.reshape((-1, 3))
+
+    # Select only points that have values and have a nan neighbour
+    # ------------------------------------------------------------
+    original_data = np.isnan(array_2d)
+    shift_up = np.isnan(np.roll(array_2d, 1, axis=0))
+    shift_down = np.isnan(np.roll(array_2d, -1, axis=0))
+    shift_left = np.isnan(np.roll(array_2d, -1, axis=1))
+    shift_right = np.isnan(np.roll(array_2d, 1, axis=1))
+    pivots_points = ~original_data & (shift_up | shift_down | shift_left | shift_right)
+    pivot_points_1d = pivots_points.reshape(-1)
+
+    # Select the points and their value to use as values for the interpolation
+    # ------------------------------------------------------------------------
+    points = data[pivot_points_1d][:, 0:2]
+    values = data[pivot_points_1d][:, 2]
+
+    points_to_interpolate = data[nan_mask][:, 0:2]
+
+    # Interpolate values
+    # ------------------
+    # noinspection PyShadowingNames
+    y = interpolate.griddata(points, values, points_to_interpolate, method=interpolation_type)
+
+    # Modify the values of the data
+    # -----------------------------
+    data_nan_mask = data[nan_mask]
+    data_nan_mask[:, 2] = y
+    data[nan_mask] = data_nan_mask
+    data = data[:, 2]
+    data = data.reshape(array_2d.shape)
+
+    return data
