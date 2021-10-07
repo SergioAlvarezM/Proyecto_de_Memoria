@@ -23,6 +23,9 @@ from typing import TYPE_CHECKING
 
 import imgui
 
+from src.engine.scene.interpolation.cubic_interpolation import CubicInterpolation
+from src.engine.scene.interpolation.linear_interpolation import LinearInterpolation
+from src.engine.scene.interpolation.nearest_interpolation import NearestInterpolation
 from src.utils import get_logger
 
 if TYPE_CHECKING:
@@ -75,10 +78,27 @@ class InterpolationTools:
 
         if imgui.button('Interpolate', -1):
             log.debug('Interpolating points.')
-            self.__gui_manager.interpolate_points(self.__gui_manager.get_active_polygon_id(),
-                                                  self.__gui_manager.get_active_model_id(),
-                                                  self.__distance_current_value,
-                                                  self.__combo_options[self.__current_combo_option])
+
+            if self.__current_combo_option == 0:
+                interpolation = LinearInterpolation(self.__gui_manager.get_active_model_id(),
+                                                    self.__gui_manager.get_active_polygon_id(),
+                                                    self.__distance_current_value)
+                self.__gui_manager.interpolate_points(interpolation)
+
+            elif self.__current_combo_option == 1:
+                interpolation = NearestInterpolation(self.__gui_manager.get_active_model_id(),
+                                                     self.__gui_manager.get_active_polygon_id(),
+                                                     self.__distance_current_value)
+                self.__gui_manager.interpolate_points(interpolation)
+
+            elif self.__current_combo_option == 2:
+                interpolation = CubicInterpolation(self.__gui_manager.get_active_model_id(),
+                                                   self.__gui_manager.get_active_polygon_id(),
+                                                   self.__distance_current_value)
+                self.__gui_manager.interpolate_points(interpolation)
+
+            else:
+                raise NotImplementedError('Interpolation method not implemented on the GUI.')
 
         if imgui.button('Apply Smoothing Algorithm', -1):
             self.__gui_manager.apply_smoothing(self.__gui_manager.get_active_polygon_id(),

@@ -70,9 +70,6 @@ class Interpolation:
         if self.polygon_id is None:
             raise InterpolationError(5)
 
-        if not scene.is_polygon_planar(self.polygon_id):
-            raise InterpolationError(6)
-
         if self.distance <= 0:
             raise InterpolationError(2)
 

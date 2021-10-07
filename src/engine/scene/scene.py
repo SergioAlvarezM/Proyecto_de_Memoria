@@ -30,6 +30,7 @@ import numpy as np
 from src.engine.scene.camera import Camera
 from src.engine.scene.geometrical_operations import get_external_polygon_points, get_max_min_inside_polygon, \
     merge_matrices
+from src.engine.scene.interpolation.interpolation import Interpolation
 from src.engine.scene.model.lines import Lines
 from src.engine.scene.model.map2dmodel import Map2DModel
 from src.engine.scene.model.map3dmodel import Map3DModel
@@ -38,7 +39,6 @@ from src.engine.scene.model.polygon import Polygon
 from src.engine.scene.model.tranformations.transformations import ortho, perspective
 from src.engine.scene.transformation.transformation import Transformation
 from src.engine.scene.transformation_helper import TransformationHelper
-from src.error.interpolation_error import InterpolationError
 from src.error.scene_error import SceneError
 from src.program.view_mode import ViewMode
 from src.utils import get_logger
@@ -1082,85 +1082,32 @@ class Scene:
         """
         return self.__engine.get_scene_setting_data()
 
-    def interpolate_points(self, polygon_id: str, model_id: str, distance: float, type_interpolation: str) -> None:
+    def interpolate_points(self, interpolation: Interpolation) -> None:
         """
-        Interpolate the points at the exterior of the polygon using the given interpolation type.
-
-        Possible interpolation types:
-            - linear
-            - nearest
-            - cubic
+        Interpolate the points at the exterior of the polygon using the given interpolation.
 
         Args:
-            type_interpolation: Type of interpolation to use.
-            polygon_id: ID of the polygon to use.
-            model_id: ID of the model to use.
-            distance: Distance to use for the interpolation.
+            interpolation: Interpolation to use to modify the models height values.
 
         Returns: None
         """
 
-        # get the data necessary for the interpolation
-        polygon = self.__polygon_hash[polygon_id]
-        model = self.__model_hash[model_id]
-
-        # check for errors
-        # ----------------
-        if len(polygon.get_point_list()) < 9:
-            raise InterpolationError(1)
-
-        if distance <= 0:
-            raise InterpolationError(2)
-
-        if not isinstance(model, Map2DModel):
-            raise InterpolationError(3)
-
-        # get the points to modify
-        vertices_shape = model.get_vertices_shape()
-        vertices = model.get_vertices_array().reshape(vertices_shape)
-        height = model.get_height_array().reshape((vertices_shape[0], vertices_shape[1]))
-        polygon_points = polygon.get_point_list()
-        external_polygon_points = get_external_polygon_points(polygon_points, distance)
+        # noinspection PyShadowingNames
+        def parallel_task():
+            """Task to run in parallel in a different thread."""
+            new_calculated_vertices = interpolation.apply()
+            return new_calculated_vertices
 
         # noinspection PyShadowingNames
-        def parallel_task(vertices, polygon_points, height, external_polygon_points, type_interpolation):
-            """
-            Task to run in parallel in a different thread.
-
-            Args:
-                vertices: Vertices to use to interpolate.
-                polygon_points: List of points of the polygon.
-                height: Array of heights.
-                external_polygon_points: List of points of the external polygon..
-                type_interpolation: Type of interpolation to use.
-            """
-            new_calculated_height = TransformationHelper().interpolate_points_external_to_polygon(
-                vertices,
-                polygon_points,
-                height,
-                external_polygon_points,
-                type_interpolation)
-            return new_calculated_height
-
-        # noinspection PyShadowingNames
-        def then_task(new_height, map2d_model, engine):
-            """
-            Task to execute after the parallel routine.
-
-            Args:
-                map2d_model: Model to change the heights.
-                new_height: New heights.
-                engine: Engine used in the program.
-            """
-            # save the changes to the model
-            map2d_model.update_heights(new_height)
-            engine.set_program_loading(False)
+        def then_task(new_vertices):
+            """Task to execute after the parallel routine."""
+            model = self.__model_hash[interpolation.model_id]
+            model.update_heights(new_vertices[:, :, 2])
+            self.__engine.set_program_loading(False)
 
         self.__engine.set_loading_message('Interpolating points, this may take a while.')
         self.__engine.set_program_loading(True)
-        self.__engine.set_thread_task(parallel_task, then_task,
-                                      (vertices, polygon_points, height, external_polygon_points, type_interpolation),
-                                      (model, self.__engine))
+        self.__engine.set_thread_task(parallel_task, then_task)
 
     def is_polygon_planar(self, polygon_id: str) -> bool:
         """

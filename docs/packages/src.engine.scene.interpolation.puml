@@ -21,13 +21,17 @@ src.engine.scene.interpolation.CubicInterpolation -u-|> src.engine.scene.interpo
 
 !startsub EXTERNAL
     src.engine.scene.interpolation.Interpolation ..> src.error.InterpolationError
+    src.engine.scene.interpolation.Interpolation <...> src.engine.scene.Scene
 
     src.engine.scene.interpolation.LinearInterpolation ..> src.engine.scene.geometrical_operations
     src.engine.scene.interpolation.LinearInterpolation ..> src.utils
+    src.engine.scene.interpolation.LinearInterpolation ..> src.error.InterpolationError
     src.engine.scene.interpolation.NearestInterpolation ..> src.engine.scene.geometrical_operations
     src.engine.scene.interpolation.NearestInterpolation ..> src.utils
+    src.engine.scene.interpolation.NearestInterpolation ..> src.error.InterpolationError
     src.engine.scene.interpolation.CubicInterpolation ..> src.engine.scene.geometrical_operations
     src.engine.scene.interpolation.CubicInterpolation ..> src.utils
+    src.engine.scene.interpolation.CubicInterpolation ..> src.error.InterpolationError
 !endsub
 
 

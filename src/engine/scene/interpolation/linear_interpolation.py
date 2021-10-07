@@ -28,6 +28,7 @@ from shapely.geometry.polygon import LinearRing
 from src.engine.scene.geometrical_operations import delete_z_axis, generate_mask, get_bounding_box_indexes, \
     get_external_polygon_points, interpolate_nan
 from src.engine.scene.interpolation.interpolation import Interpolation
+from src.error.interpolation_error import InterpolationError
 from src.utils import is_clockwise
 
 if TYPE_CHECKING:
@@ -56,8 +57,17 @@ class LinearInterpolation(Interpolation):
 
         Returns: None
         """
+        super().initialize(scene)
+
         self.__model_vertices = scene.get_map2d_model_vertices_array(self.model_id)
         self.__polygon_points = scene.get_polygon_points(self.polygon_id)
+
+        if not scene.is_polygon_planar(self.polygon_id):
+            raise InterpolationError(6)
+
+        if len(self.__polygon_points) < 9:
+            raise InterpolationError(1)
+
         self.__external_polygon_points = get_external_polygon_points(self.__polygon_points, self.distance)
 
     def apply(self) -> np.ndarray:

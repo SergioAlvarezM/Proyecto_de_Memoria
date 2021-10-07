@@ -17,7 +17,7 @@ package src.engine.scene {
     !includesub src.engine.scene.interpolation.puml!INTERNAL
 }
 
-src.engine.scene.Scene .> src.engine.scene.TransformationHelper
+src.engine.scene.Scene ..> src.engine.scene.TransformationHelper
 !endsub
 
 

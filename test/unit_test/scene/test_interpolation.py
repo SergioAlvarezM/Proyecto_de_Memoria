@@ -22,6 +22,9 @@ import os
 import unittest
 import warnings
 
+from src.engine.scene.interpolation.cubic_interpolation import CubicInterpolation
+from src.engine.scene.interpolation.linear_interpolation import LinearInterpolation
+from src.engine.scene.interpolation.nearest_interpolation import NearestInterpolation
 from src.engine.scene.transformation.linear_transformation import LinearTransformation
 from src.input.NetCDF import read_info
 from test.test_case import ProgramTestCase
@@ -52,10 +55,10 @@ class TestInterpolation(ProgramTestCase):
         self.engine.transform_points(transformation)
 
         # apply interpolation
-        self.engine.interpolate_points(self.engine.get_active_polygon_id(),
-                                       self.engine.get_active_model_id(),
-                                       2,
-                                       'cubic')
+        interpolation = CubicInterpolation(self.engine.get_active_model_id(),
+                                           self.engine.get_active_polygon_id(),
+                                           2)
+        self.engine.interpolate_points(interpolation)
 
         # export model to compare data
         self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
@@ -86,10 +89,10 @@ class TestInterpolation(ProgramTestCase):
         self.engine.transform_points(transformation)
 
         # apply interpolation
-        self.engine.interpolate_points(self.engine.get_active_polygon_id(),
-                                       self.engine.get_active_model_id(),
-                                       2,
-                                       'nearest')
+        interpolation = NearestInterpolation(self.engine.get_active_model_id(),
+                                             self.engine.get_active_polygon_id(),
+                                             2)
+        self.engine.interpolate_points(interpolation)
 
         # export model to compare data
         self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
@@ -120,10 +123,10 @@ class TestInterpolation(ProgramTestCase):
         self.engine.transform_points(transformation)
 
         # apply interpolation
-        self.engine.interpolate_points(self.engine.get_active_polygon_id(),
-                                       self.engine.get_active_model_id(),
-                                       2,
-                                       'linear')
+        interpolation = LinearInterpolation(self.engine.get_active_model_id(),
+                                            self.engine.get_active_polygon_id(),
+                                            2)
+        self.engine.interpolate_points(interpolation)
 
         # export model to compare data
         self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),

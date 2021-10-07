@@ -20,12 +20,11 @@ File with the class TransformationHelper, class in charge of making transformati
 """
 
 import numpy as np
-from scipy import interpolate as interpolate_scipy
 from shapely.geometry.polygon import LinearRing as LinearRing, Polygon
 from shapely.vectorized import contains
 from skimage.filters import gaussian as gaussian_filter
 
-from src.utils import get_logger, is_clockwise
+from src.utils import get_logger
 
 log = get_logger(module='TRANSFORMATION_HELPER')
 
@@ -117,68 +116,6 @@ class TransformationHelper:
 
         return [min_x_index, max_x_index, min_y_index, max_y_index]
 
-    def __interpolate_nan(self, array_2d: np.ndarray, nan_mask: np.ndarray,
-                          interpolation_type: str = 'linear') -> np.ndarray:
-        """
-        Interpolate the missing values from the array2d using scipy interpolation method.
-
-        Args:
-            array_2d: Array 2D with missing values to interpolate.
-            nan_mask: Array 2D with a mask specifying where are located the nan values.
-            interpolation_type: Type of the interpolation. (nearest, linear, cubic)
-
-        Returns: Array interpolated.
-        """
-        log.debug('Interpolating nan')
-
-        log.debug('Generating data arrays')
-        # noinspection PyShadowingNames
-        grid_x, grid_y = np.mgrid[:array_2d.shape[0], :array_2d.shape[1]]
-        data = np.zeros((array_2d.shape[0], array_2d.shape[1], 3))
-        data[:, :, 0] = grid_x
-        data[:, :, 1] = grid_y
-        data[:, :, 2] = array_2d
-
-        # change shape of the data to an array of points
-        nan_mask = nan_mask.reshape(-1)
-        data = data.reshape((-1, 3))
-
-        # select only points that have values and have a nan neighbour
-        original_data = np.isnan(array_2d)
-        shift_up = np.isnan(np.roll(array_2d, 1, axis=0))
-        shift_down = np.isnan(np.roll(array_2d, -1, axis=0))
-        shift_left = np.isnan(np.roll(array_2d, -1, axis=1))
-        shift_right = np.isnan(np.roll(array_2d, 1, axis=1))
-        pivots_points = ~original_data & (shift_up | shift_down | shift_left | shift_right)
-        pivot_points_1d = pivots_points.reshape(-1)
-
-        # select the points and their value to use as values for the interpolation
-        points = data[pivot_points_1d][:, 0:2]
-        values = data[pivot_points_1d][:, 2]
-
-        # Deprecated code
-        # Uses all the points of the matrix to interpolate. Too slow...
-        # -------------------------------------------------------------
-        # # noinspection PyShadowingNames
-        # points = data[~nan_mask][:, 0:2]
-        # # noinspection PyShadowingNames
-        # values = data[~nan_mask][:, 2]
-
-        points_to_interpolate = data[nan_mask][:, 0:2]
-
-        log.debug('Initiated interpolate process using numpy')
-        # noinspection PyShadowingNames
-        y = interpolate_scipy.griddata(points, values, points_to_interpolate, method=interpolation_type)
-        log.debug('Finished interpolation')
-
-        data_nan_mask = data[nan_mask]
-        data_nan_mask[:, 2] = y
-        data[nan_mask] = data_nan_mask
-        data = data[:, 2]
-        data = data.reshape(array_2d.shape)
-        log.debug('Ended nan interpolation')
-
-        return data
 
     def apply_smoothing_over_area(self, internal_polygon_points: list,
                                   external_polygon_points: list,
@@ -221,67 +158,6 @@ class TransformationHelper:
 
         heights_cut[mask_in_between] = new_heights[mask_in_between]
 
-        heights[min_y_index:max_y_index, min_x_index:max_x_index] = heights_cut
-
-        return heights
-
-    def interpolate_points_external_to_polygon(self, points_array: np.ndarray, polygon_points: list,
-                                               heights: np.ndarray, external_polygon_points: list,
-                                               type_interpolation: str) -> np.ndarray:
-        """
-        Interpolate the points that are external to the polygon until a certain distance.
-
-        Interpolation types are the followings:
-            - linear
-            - nearest
-            - cubic
-
-        Args:
-            type_interpolation: Type of interpolation to use.
-            external_polygon_points: List with the points of the external polygon. [x1, y1, z1, x2, y2, z2, ...]
-            points_array: Points of the model. (shape must be (x, y, 3))
-            polygon_points: List with the points of the polygon. [x1, y1, z1, x2, y2, z2, ...]
-            heights: Array with the height of the points. must have shape (x, y)
-
-        Returns: Array of heights with height of the points external to the polygon modified.
-        """
-        log.debug('Interpolate points external to polygon')
-        external_points_no_z_axis = self.__delete_z_axis(external_polygon_points)
-
-        # check if the points are already CW
-        if is_clockwise(external_points_no_z_axis):  # points must be in CCW direction
-            external_points_no_z_axis.reverse()
-
-        # create a polygon external to the one proportionate
-        exterior_polygon = LinearRing(external_points_no_z_axis)
-
-        # get the bounding box of the nan values. Add/subtract 1 from every index to get one row/col of values before
-        # the nan values.
-        min_x_index, max_x_index, min_y_index, max_y_index = self.__get_bounding_box_indexes(points_array,
-                                                                                             exterior_polygon)
-        min_x_index -= 1
-        max_x_index += 1
-        min_y_index -= 1
-        max_y_index += 1
-
-        # copy the array to not modify the original
-        heights = heights.copy()
-
-        points_cut = points_array[min_y_index:max_y_index, min_x_index:max_x_index, :]
-        heights_cut = heights[min_y_index:max_y_index, min_x_index:max_x_index]
-
-        # generate a mask of the internal points
-        log.debug('Generating masks')
-        mask_external = self.__generate_mask(points_cut, external_polygon_points)
-        mask_internal = self.__generate_mask(points_cut, polygon_points)
-
-        # apply the logical operations
-        in_between_mask = mask_external != mask_internal
-        heights_cut[in_between_mask == True] = np.nan  # noqa
-
-        # apply the interpolation algorithm from scipy
-        log.debug('Interpolating using numpy')
-        heights_cut = self.__interpolate_nan(heights_cut, in_between_mask, type_interpolation)
         heights[min_y_index:max_y_index, min_x_index:max_x_index] = heights_cut
 
         return heights

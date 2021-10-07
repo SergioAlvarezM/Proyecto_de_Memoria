@@ -55,6 +55,7 @@ if TYPE_CHECKING:
     from glfw import _GLFWwindow
     from src.program.tools import Tools
     from src.engine.scene.transformation.transformation import Transformation
+    from src.engine.scene.interpolation.interpolation import Interpolation
 
 # noinspection SpellCheckingInspection
 log = get_logger(module='GUIMANAGER')
@@ -878,19 +879,16 @@ class GUIManager:
         """
         return self.__engine.get_zoom_level()
 
-    def interpolate_points(self, polygon_id: str, model_id: str, distance: float, type_interpolation: str) -> None:
+    def interpolate_points(self, interpolation: 'Interpolation') -> None:
         """
-        Call the engine to interpolate the points using the specified polygons and the specified distance.
+        Call the engine to interpolate the points.
 
         Args:
-            type_interpolation: Type of interpolation to use.
-            model_id: ID of the model to use.
-            polygon_id: ID of the polygon.
-            distance: Distance to use for the interpolation.
+            interpolation: Interpolation to use to modify the points of the model.
 
         Returns: None
         """
-        self.__engine.interpolate_points(polygon_id, model_id, distance, type_interpolation)
+        self.__engine.interpolate_points(interpolation)
 
     def is_mouse_inside_frame(self) -> bool:
         """
