@@ -39,4 +39,5 @@ class InterpolationError(SceneError):
             3: 'Can not interpolate model that is not an instance of Map2DModel.',
             4: 'Model can not be None.',
             5: 'Polygon can not be None',
+            6: 'Polygon is not planar'
         }

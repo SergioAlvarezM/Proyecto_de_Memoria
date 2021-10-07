@@ -1225,6 +1225,8 @@ class Engine:
                 self.set_modal_text('Error', 'Model not selected.')
             elif e.code == 5:
                 self.set_modal_text('Error', 'Polygon not selected.')
+            elif e.code == 6:
+                self.set_modal_text('Error', 'Polygon selected is not planar.')
 
     def is_mouse_hovering_frame(self) -> bool:
         """
