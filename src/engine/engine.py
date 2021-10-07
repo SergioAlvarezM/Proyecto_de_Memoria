@@ -1221,6 +1221,10 @@ class Engine:
             elif e.code == 3:
                 self.set_modal_text('Error', 'Model used for interpolation is not accepted by '
                                              'the program.')
+            elif e.code == 4:
+                self.set_modal_text('Error', 'Model not selected.')
+            elif e.code == 5:
+                self.set_modal_text('Error', 'Polygon not selected.')
 
     def is_mouse_hovering_frame(self) -> bool:
         """
