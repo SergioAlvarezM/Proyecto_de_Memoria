@@ -14,7 +14,6 @@ package src.error {
     class src.error.PolygonError
     class src.error.RepeatedPointError
     class src.error.SceneError
-    class src.error.WrongInterpolationTypeError
     class src.error.FilterError
     class src.error.PolygonFolderError
 }
@@ -29,7 +28,6 @@ src.error.BaseError <|-- src.error.FilterError
 
 src.error.PolygonError <|-- src.error.RepeatedPointError
 src.error.PolygonError <|-- src.error.LineIntersectionError
-src.error.GUIError <|-- src.error.WrongInterpolationTypeError
 src.error.SceneError <|-- src.error.ModelTransformationError
 src.error.SceneError <|-- src.error.InterpolationError
 !endsub
