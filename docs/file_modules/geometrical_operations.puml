@@ -1,10 +1,11 @@
 @startuml
 !$file = "(F,#ff75ff) File"
 class src.engine.scene.geometrical_operations <<$file>>{
-    delete_z_axis(list_of_points): list
-    get_bounding_box_indexes(points_array, polygon): list
-    generate_mask(points_array, polygon_points): array
-    merge_matrix(first_matrix, second_matrix): array
+    + delete_z_axis(list_of_points): list
+    + get_bounding_box_indexes(points_array, polygon): list
+    + generate_mask(points_array, polygon_points): array
+    + merge_matrix(first_matrix, second_matrix): array
+    + get_max_min_inside_polygon(points_array, polygon_points, heights): tuple
 }
 
 @enduml
