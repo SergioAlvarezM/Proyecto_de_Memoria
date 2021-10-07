@@ -227,50 +227,6 @@ class TransformationHelper:
 
         return heights
 
-    def get_inside_polygon_triangulation(self, polygon_points: list, z_value: float = 0.5) -> list:
-        """
-        Get a list of floats representing the vertices of the triangles to cover the interior of the polygon.
-
-        Args:
-            z_value: Value to use as a third component of the vertices.
-            polygon_points: Points of the polygon. (internal area should not be considered in the output)
-
-        Returns: list with vertices of triangles.
-        """
-
-        # get the data clean
-        polygon_points_no_z = self.__delete_z_axis(polygon_points)
-        polygon = Polygon(polygon_points_no_z)
-
-        # triangulate the coordinates
-        triangulation = triangulate(polygon)
-        to_return = []
-
-        # clean the triangulation
-        for triangle in triangulation:
-            coords = list(zip(*triangle.exterior.coords.xy))
-
-            line_1 = LineString([coords[0], coords[1]])
-            line_2 = LineString([coords[1], coords[2]])
-            line_3 = LineString([coords[2], coords[3]])
-
-            if isinstance(polygon.intersection(line_1), LineString) and \
-                    isinstance(polygon.intersection(line_2), LineString) and \
-                    isinstance(polygon.intersection(line_3), LineString):
-                to_return.append(coords[0][0])
-                to_return.append(coords[0][1])
-                to_return.append(z_value)
-
-                to_return.append(coords[1][0])
-                to_return.append(coords[1][1])
-                to_return.append(z_value)
-
-                to_return.append(coords[2][0])
-                to_return.append(coords[2][1])
-                to_return.append(z_value)
-
-        return to_return
-
     def get_max_min_inside_polygon(self, points_array: np.ndarray, polygon_points: List[float],
                                    heights: np.ndarray) -> tuple:
         """
