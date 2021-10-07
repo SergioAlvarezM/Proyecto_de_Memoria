@@ -18,7 +18,6 @@
 """
 File with the class TransformationHelper, class in charge of making transformation to the points of different models.
 """
-from typing import List
 
 import numpy as np
 from scipy import interpolate as interpolate_scipy
@@ -225,39 +224,6 @@ class TransformationHelper:
         heights[min_y_index:max_y_index, min_x_index:max_x_index] = heights_cut
 
         return heights
-
-    def get_max_min_inside_polygon(self, points_array: np.ndarray, polygon_points: List[float],
-                                   heights: np.ndarray) -> tuple:
-        """
-        Extract the maximum and minimum value of the points that are inside the polygon.
-
-        If no points are inside the polygon, then numpy.nan is returned as maximum and minimum values.
-
-        Args:
-            points_array: Points of the model. (shape must be (x, y, 3))
-            polygon_points: List with the points of the polygon. [x1, y1, z1, x2, y2, z2, ...]
-            heights: height: Array with the height of the points. must have shape (x, y)
-
-        Returns: Tuple with the maximum and minimum value (max, min).
-        """
-        points_no_z_axis = self.__delete_z_axis(polygon_points)
-        closed_polygon = LinearRing(points_no_z_axis)
-        [min_x_index, max_x_index, min_y_index, max_y_index] = self.__get_bounding_box_indexes(points_array,
-                                                                                               closed_polygon)
-
-        points_array_cut = points_array[min_y_index:max_y_index, min_x_index:max_x_index, :]
-        heights_cut = heights[min_y_index:max_y_index, min_x_index:max_x_index]
-
-        flags = self.__generate_mask(points_array_cut, polygon_points)
-
-        # return nan if no points are inside the polygon
-        if len(heights_cut.reshape(-1)) == 0:
-            return np.nan, np.nan
-
-        maximum = np.nanmax(heights_cut[flags])
-        minimum = np.nanmin(heights_cut[flags])
-
-        return maximum, minimum
 
     def interpolate_points_external_to_polygon(self, points_array: np.ndarray, polygon_points: list,
                                                heights: np.ndarray, external_polygon_points: list,

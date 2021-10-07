@@ -28,7 +28,7 @@ import OpenGL.constant as OGLConstant
 import numpy as np
 
 from src.engine.scene.camera import Camera
-from src.engine.scene.geometrical_operations import merge_matrices
+from src.engine.scene.geometrical_operations import get_max_min_inside_polygon, merge_matrices
 from src.engine.scene.model.lines import Lines
 from src.engine.scene.model.map2dmodel import Map2DModel
 from src.engine.scene.model.map3dmodel import Map3DModel
@@ -351,7 +351,7 @@ class Scene:
         if not polygon.is_planar():
             raise SceneError(1)
 
-        return TransformationHelper().get_max_min_inside_polygon(vertex_array, polygon_points, height_array)
+        return get_max_min_inside_polygon(vertex_array, polygon_points, height_array)
 
     def change_camera_azimuthal_angle(self, angle):
         """
