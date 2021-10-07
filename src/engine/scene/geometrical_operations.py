@@ -155,3 +155,38 @@ def get_max_min_inside_polygon(points_array: np.ndarray,
     minimum = np.nanmin(heights_cut[flags])
 
     return maximum, minimum
+
+
+def get_external_polygon_points(polygon_points: List[float],
+                                distance: float,
+                                default_z_value: float = 0.5) -> List[float]:
+    """
+    Calculate the external polygon at a given distance from the specified polygon.
+
+    Args:
+        polygon_points: List of points of the polygon. [x1, y1, z1, x2, y2, z2, ...]
+        distance: Distance to use to get the external polygon.
+        default_z_value: Value to use in the z-axis of the external polygon points.
+
+    Returns:
+        List of points of the external polygon. [x1, y1, z1, x2, y2, z2, ...]
+    """
+    # Delete the z-axis value from the points
+    # ---------------------------------------
+    new_list = delete_z_axis(polygon_points)
+
+    # Get the external polygon
+    # ------------------------
+    polygon_shapely = Polygon(new_list)
+    external_polygon = polygon_shapely.buffer(distance).exterior
+
+    # Get the coordinates and create a new list
+    # -----------------------------------------
+    x_coords, y_coords = external_polygon.xy
+    polygon_exterior = []
+    for x_coordinate, y_coordinate in zip(x_coords, y_coords):
+        polygon_exterior.append(x_coordinate)
+        polygon_exterior.append(y_coordinate)
+        polygon_exterior.append(default_z_value)
+
+    return polygon_exterior

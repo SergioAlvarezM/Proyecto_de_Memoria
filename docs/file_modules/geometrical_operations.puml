@@ -6,6 +6,7 @@ class src.engine.scene.geometrical_operations <<$file>>{
     + generate_mask(points_array, polygon_points): array
     + merge_matrix(first_matrix, second_matrix): array
     + get_max_min_inside_polygon(points_array, polygon_points, heights): tuple
+    + get_external_polygon_points(polygon_points, distance, default_z_value): list
 }
 
 @enduml

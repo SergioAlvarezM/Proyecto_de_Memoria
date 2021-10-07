@@ -28,7 +28,8 @@ import OpenGL.constant as OGLConstant
 import numpy as np
 
 from src.engine.scene.camera import Camera
-from src.engine.scene.geometrical_operations import get_max_min_inside_polygon, merge_matrices
+from src.engine.scene.geometrical_operations import get_external_polygon_points, get_max_min_inside_polygon, \
+    merge_matrices
 from src.engine.scene.model.lines import Lines
 from src.engine.scene.model.map2dmodel import Map2DModel
 from src.engine.scene.model.map3dmodel import Map3DModel
@@ -229,7 +230,8 @@ class Scene:
         model = self.__model_hash[model_id]
 
         polygon_points = polygon.get_point_list()
-        external_polygon_points = polygon.get_exterior_polygon_points(distance_to_polygon)
+        external_polygon_points = get_external_polygon_points(polygon_points,
+                                                              distance_to_polygon)
 
         vertices_shape = model.get_vertices_shape()
 
@@ -1118,7 +1120,7 @@ class Scene:
         vertices = model.get_vertices_array().reshape(vertices_shape)
         height = model.get_height_array().reshape((vertices_shape[0], vertices_shape[1]))
         polygon_points = polygon.get_point_list()
-        external_polygon_points = polygon.get_exterior_polygon_points(distance)
+        external_polygon_points = get_external_polygon_points(polygon_points, distance)
 
         # noinspection PyShadowingNames
         def parallel_task(vertices, polygon_points, height, external_polygon_points, type_interpolation):
@@ -1196,7 +1198,8 @@ class Scene:
         if len(polygon_points) < 9:
             raise SceneError(2)
 
-        polygon_external_points = polygon.get_exterior_polygon_points(distance)
+        polygon_external_points = get_external_polygon_points(polygon_points,
+                                                              distance)
 
         # generating lines model
         lines_external = Lines(self, point_list=np.array(polygon_external_points).reshape((-1, 3)))
