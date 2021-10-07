@@ -22,8 +22,7 @@ from typing import List
 
 import numpy as np
 from scipy import interpolate as interpolate_scipy
-from shapely.geometry.polygon import LineString, LinearRing as LinearRing, Polygon
-from shapely.ops import triangulate
+from shapely.geometry.polygon import LinearRing as LinearRing, Polygon
 from shapely.vectorized import contains
 from skimage.filters import gaussian as gaussian_filter
 
