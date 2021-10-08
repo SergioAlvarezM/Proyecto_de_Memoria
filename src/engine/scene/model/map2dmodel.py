@@ -460,20 +460,23 @@ class Map2DModel(MapModel):
 
     def set_color_file(self, filename: str) -> None:
         """
+        Set the color file to use for the model.
 
         Args:
             filename: File to use for the colors.
 
         Returns: None
-
         """
-        log.debug('Setting colors from file')
         if len(self.get_vertices_array()) == 0:
             raise AssertionError('Did you forget to set the vertices? (set_vertices_from_grid)')
 
-        # set the shaders
+        # Set the shaders to use colors
+        # -----------------------------
         self.set_shaders('./src/engine/shaders/model_2d_colors_vertex.glsl',
                          './src/engine/shaders/model_2d_colors_fragment.glsl')
+
+        # Extract the data for the coloration from the file
+        # -------------------------------------------------
         self.__color_file = filename
 
         file_data = read_file(filename)
@@ -484,7 +487,8 @@ class Map2DModel(MapModel):
             colors.append(element['color'])
             height_limit.append(element['height'])
 
-        # send error in case too many colors are passed
+        # Store the data of the coloration to be passed to the shader
+        # -----------------------------------------------------------
         if len(colors) > 500:
             raise BufferError('Shader used does not support more than 500 colors in the file.')
 
