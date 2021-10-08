@@ -279,7 +279,7 @@ class Scene:
         # ask the model and polygon for the parameters to calculate the new height
         vertices_shape = model.get_vertices_shape()
         vertex_array = model.get_vertices_array().reshape(vertices_shape)
-        height_array = model.get_height_array().reshape((vertices_shape[0], vertices_shape[1]))
+        height_array = model.get_height_array()
         polygon_points = polygon.get_point_list()
 
         if len(polygon_points) < 9:
@@ -842,9 +842,9 @@ class Scene:
                                         y_coordinate: float,
                                         model_id: str) -> Union[float, None]:
         """
-        Get the height of the active model in the specified coordinates.
+        Get the height of the specified model in the specified coordinates.
 
-        If coordinates are outside the model or there is no active model, then None is returned.
+        If coordinates are outside the model is None, then None is returned.
 
         Args:
             x_coordinate: x-axis coordinate.
@@ -1029,14 +1029,12 @@ class Scene:
         # noinspection PyShadowingNames
         def parallel_task():
             """Task to run in parallel in a different thread."""
-            new_calculated_vertices = interpolation.apply()
-            return new_calculated_vertices
+            interpolation.apply()
 
         # noinspection PyShadowingNames
-        def then_task(new_vertices):
+        def then_task():
             """Task to execute after the parallel routine."""
-            model = self.__model_hash[interpolation.model_id]
-            model.update_heights(new_vertices[:, :, 2])
+            self.__model_hash[interpolation.model_id].update_vertices()
             self.__engine.set_program_loading(False)
 
         self.__engine.set_loading_message('Interpolating points, this may take a while.')
@@ -1159,7 +1157,7 @@ class Scene:
         def then_routine():
             """
             Method that lower the value of the parameter __should_execute_then_reload by one every time that a
-            model finished the method recalculate_vertices_from_grid_async.
+            model finished the method update_indices_async.
 
             This method is executed so that the THEN method given to the reload_models_async method only runs when all
             the models finished the execution of their threads.
@@ -1174,7 +1172,7 @@ class Scene:
                 then()
 
         for model in self.__model_hash.values():
-            model.recalculate_vertices_from_grid_async(quality=quality, then=then_routine)
+            model.update_indices_async(quality=quality, then=then_routine)
 
         # if there is no models, call the then routine doing nothing
         if len(self.__model_hash) == 0:
@@ -1354,10 +1352,10 @@ class Scene:
         Returns: None
         """
         # Apply the transformation
-        new_vertices = transformation.apply()
+        transformation.apply()
 
         # Modify the height of the modified model
-        self.__model_hash[transformation.model_id].update_heights(new_vertices[:, :, 2])
+        self.__model_hash[transformation.model_id].update_vertices()
 
     def update_3D_model(self, model_id: str) -> None:
         """
