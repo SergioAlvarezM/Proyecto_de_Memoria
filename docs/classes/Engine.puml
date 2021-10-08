@@ -5,10 +5,8 @@ class Engine {
     + render: Render
     + scene: Scene
     + window: GLFWWindow
-
     + use_threads: boolean
     + wait_loading_frame_render: boolean
-
     - __thread_manager: ThreadManager
     - __process_manager: ProcessManager
     - __task_manager: TaskManager
