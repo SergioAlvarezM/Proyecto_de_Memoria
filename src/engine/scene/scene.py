@@ -183,6 +183,46 @@ class Scene:
                                                                    allow_outside_scene=False)
             self.__polygon_hash[polygon_id].add_point(new_x, new_y)
 
+    def apply_interpolation(self, interpolation: Interpolation) -> None:
+        """
+        Interpolate the points at the exterior of the polygon using the given interpolation.
+
+        Args:
+            interpolation: Interpolation to use to modify the models height values.
+
+        Returns: None
+        """
+
+        # noinspection PyShadowingNames
+        def parallel_task():
+            """Task to run in parallel in a different thread."""
+            interpolation.apply()
+
+        # noinspection PyShadowingNames
+        def then_task():
+            """Task to execute after the parallel routine."""
+            self.__model_hash[interpolation.model_id].update_vertices()
+            self.__engine.set_program_loading(False)
+
+        self.__engine.set_loading_message('Interpolating points, this may take a while.')
+        self.__engine.set_program_loading(True)
+        self.__engine.set_thread_task(parallel_task, then_task)
+
+    def apply_transformation(self, transformation: 'Transformation') -> None:
+        """
+        Modify the points inside the polygon from the specified model using a linear transformation.
+
+        Args:
+            transformation: transformation to apply.
+
+        Returns: None
+        """
+        # Apply the transformation
+        transformation.apply()
+
+        # Modify the height of the modified model
+        self.__model_hash[transformation.model_id].update_vertices()
+
     def calculate_map_position_from_window(self,
                                            position_x: int,
                                            position_y: int,
@@ -1016,31 +1056,6 @@ class Scene:
         """
         return self.__engine.get_scene_setting_data()
 
-    def apply_interpolation(self, interpolation: Interpolation) -> None:
-        """
-        Interpolate the points at the exterior of the polygon using the given interpolation.
-
-        Args:
-            interpolation: Interpolation to use to modify the models height values.
-
-        Returns: None
-        """
-
-        # noinspection PyShadowingNames
-        def parallel_task():
-            """Task to run in parallel in a different thread."""
-            interpolation.apply()
-
-        # noinspection PyShadowingNames
-        def then_task():
-            """Task to execute after the parallel routine."""
-            self.__model_hash[interpolation.model_id].update_vertices()
-            self.__engine.set_program_loading(False)
-
-        self.__engine.set_loading_message('Interpolating points, this may take a while.')
-        self.__engine.set_program_loading(True)
-        self.__engine.set_thread_task(parallel_task, then_task)
-
     def is_polygon_planar(self, polygon_id: str) -> bool:
         """
         Check if the polygon is planar or not.
@@ -1341,21 +1356,6 @@ class Scene:
         Returns: None
         """
         self.__engine.set_thread_task(parallel_task, then)
-
-    def apply_transformation(self, transformation: 'Transformation') -> None:
-        """
-        Modify the points inside the polygon from the specified model using a linear transformation.
-
-        Args:
-            transformation: transformation to apply.
-
-        Returns: None
-        """
-        # Apply the transformation
-        transformation.apply()
-
-        # Modify the height of the modified model
-        self.__model_hash[transformation.model_id].update_vertices()
 
     def update_3D_model(self, model_id: str) -> None:
         """
