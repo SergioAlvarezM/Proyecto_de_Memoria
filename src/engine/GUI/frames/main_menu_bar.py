@@ -48,26 +48,6 @@ class MainMenuBar(Frame):
         """
         super().__init__(gui_manager)
 
-    def render(self) -> None:
-        """
-        Render the main menu bar on the screen.
-        Returns: None
-        """
-        current_model = self._GUI_manager.get_active_model_id()
-        model_loaded = current_model is not None
-
-        if imgui.begin_main_menu_bar():
-            # File menu
-            self.__file_menu(model_loaded)
-
-            # Edit menu
-            self.__edit_menu(model_loaded)
-
-            # View menu
-            self.__view_menu(model_loaded)
-
-            imgui.end_main_menu_bar()
-
     def __file_menu(self, model_loaded: bool):
         """
         Options that appear on the File option of the main menu bar.
@@ -172,3 +152,23 @@ class MainMenuBar(Frame):
             if imgui.is_item_clicked() and model_loaded:
                 self._GUI_manager.undo_action()
             imgui.end_menu()
+
+    def render(self) -> None:
+        """
+        Render the main menu bar on the screen.
+        Returns: None
+        """
+        current_model = self._GUI_manager.get_active_model_id()
+        model_loaded = current_model is not None
+
+        if imgui.begin_main_menu_bar():
+            # File menu
+            self.__file_menu(model_loaded)
+
+            # Edit menu
+            self.__edit_menu(model_loaded)
+
+            # View menu
+            self.__view_menu(model_loaded)
+
+            imgui.end_main_menu_bar()
