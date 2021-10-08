@@ -1754,7 +1754,9 @@ class Engine:
         """
         try:
             transformation.initialize(self.scene)
-            self.scene.transform_points(transformation)
+
+            self.set_loading_message('Applying transformation.')
+            self.set_task_with_loading_frame(lambda: self.scene.transform_points(transformation))
 
         except FilterError as e:
             if e.code == 0:

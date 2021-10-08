@@ -1355,7 +1355,7 @@ class Scene:
 
         Returns: None
         """
-        # Apply th transformation
+        # Apply the transformation
         new_vertices = transformation.apply()
 
         # Modify the height of the modified model
