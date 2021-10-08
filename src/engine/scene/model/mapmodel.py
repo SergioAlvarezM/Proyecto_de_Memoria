@@ -82,6 +82,8 @@ class MapModel(Model):
             bottom_coordinate: Bottom coordinate to cut the map.
             step_x: Number of vertices in the x axis
             step_y: Number of elements in the y axis
+            x_value_array: Values used in the x-axis
+            y_value_array: Values used in the y-axis
 
         Returns: List of index
         """
