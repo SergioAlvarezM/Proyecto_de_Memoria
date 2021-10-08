@@ -183,22 +183,6 @@ class Scene:
                                                                    allow_outside_scene=False)
             self.__polygon_hash[polygon_id].add_point(new_x, new_y)
 
-    def add_polygon(self, polygon: 'Polygon') -> None:
-        """
-        Add a new polygon to render on the scene.
-
-        This method should only be called on testing on experimenting. To add a new polygon to the scene call the
-        method create_new_polygon, this method will create a polygon and add it to the scene to be rendered.
-
-        Args:
-            polygon: Polygon to add to the scene
-
-        Returns: None
-        """
-        log.debug("Added polygon to the scene")
-        self.__polygon_hash[polygon.get_id()] = polygon
-        self.__polygon_id_count += 1
-
     def calculate_map_position_from_window(self,
                                            position_x: int,
                                            position_y: int,
@@ -642,10 +626,11 @@ class Scene:
         else:
             self.__polygon_draw_priority.insert(priority_position, new_polygon_id)
 
-        # Create the polygon and return its id
-        # ------------------------------------
+        # Create the polygon, add it to the scene and return its ID
+        # ---------------------------------------------------------
         polygon = Polygon(self, new_polygon_id, point_list, parameters)
-        self.add_polygon(polygon)
+        self.__polygon_hash[polygon.get_id()] = polygon
+        self.__polygon_id_count += 1
 
         return new_polygon_id
 
