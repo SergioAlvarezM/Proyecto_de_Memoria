@@ -819,9 +819,6 @@ class Scene:
             raise TypeError(f'Model {model_id} is not a Map2DModel instance.')
 
         vertices_array = model.get_vertices_array().reshape(model.get_vertices_shape())
-        heights = model.get_height_array().reshape((vertices_array.shape[0], vertices_array.shape[1]))
-
-        vertices_array[:, :, 2] = heights
         return vertices_array
 
     def get_model_coordinates_arrays(self, model_id: str) -> (Union[np.ndarray, None], Union[np.ndarray, None]):
