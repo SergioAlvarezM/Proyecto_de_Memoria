@@ -16,7 +16,7 @@
 #  END GPL LICENSE BLOCK
 
 """
-Module that defines the LinearInterpolation class. Class in charge of executing the linear interpolation of the points
+Module that defines the SmoothInterpolation class. Class in charge of executing the smooth interpolation of the points
 external to the specified polygon.
 """
 
@@ -38,6 +38,9 @@ if TYPE_CHECKING:
 class SmoothInterpolation(Interpolation):
     """
     Class in charge of applying the smoothing algorithm to the points external to the specified polygon.
+
+    The interpolation is executed using a gaussian filter over the points external to the polygon, modifying them
+    so the difference between the height of the points and they neighbours become smaller.
     """
 
     def __init__(self, model_id: str, polygon_id: str, distance: float):
