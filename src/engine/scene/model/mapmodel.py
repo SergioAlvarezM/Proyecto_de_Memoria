@@ -164,5 +164,4 @@ class MapModel(Model):
         indices[:, 5] = index_6
         indices = indices.reshape(-1).astype(np.uint32)
 
-
         return indices
