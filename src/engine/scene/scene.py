@@ -539,8 +539,8 @@ class Scene:
             model.id = str(self.__model_id_count)
             self.__model_id_count += 1
 
-            # Update scene model information
-            # ------------------------------
+            # Update scene model information and add the model to the scene
+            # -------------------------------------------------------------
             self.update_projection_matrix_2D()
             self.__model_draw_priority.append(model.id)
             self.__model_hash[model.id] = model
