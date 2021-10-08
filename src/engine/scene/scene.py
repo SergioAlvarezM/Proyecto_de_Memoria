@@ -438,18 +438,19 @@ class Scene:
         self.__polygon_draw_priority.insert(new_priority, polygon_id)
 
     def create_3D_model_if_not_exists(self,
-                                      model_id: str) -> None:
+                                      model_id: Union[str, None]) -> None:
         """
         Create a new map3D_model object and add it to the scene.
 
-        This method removes all the other 3D models loaded into the scene.
+        This method creates the 3D model of an existent 2D model if the 3D model does not exists. Also, removes all
+        the other 3D models loaded into the program.
 
         Args:
             model_id: ID of the model to generate the 3D model.
 
         Returns: Id of the new map3D_model
         """
-        if model_id not in self.__3d_model_hash:
+        if model_id in self.__model_hash and model_id not in self.__3d_model_hash:
             self.reset_camera_values()
             new_model = Map3DModel(self, self.__model_hash[model_id])
             new_model.id = model_id
