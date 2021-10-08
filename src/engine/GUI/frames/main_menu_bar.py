@@ -24,6 +24,7 @@ import OpenGL.GL as GL
 import imgui
 
 from src.engine.GUI.frames.frame import Frame
+from src.engine.scene.transformation.fill_nan_transformation import FillNanTransformation
 from src.program.view_mode import ViewMode
 from src.utils import get_logger
 
@@ -153,6 +154,35 @@ class MainMenuBar(Frame):
                 self._GUI_manager.undo_action()
             imgui.end_menu()
 
+    def __tools_menu(self, model_loaded: bool):
+        """
+        Options for the user to modify the maps.
+
+        Args:
+            model_loaded: Boolean indicating if there is a model loaded in the program.
+        """
+        if imgui.begin_menu('Tools', True):
+
+            # Get the information ready for the menu to work
+            # ----------------------------------------------
+            polygon_id_list = self._GUI_manager.get_polygon_id_list()
+            polygons_loaded = polygon_id_list != []
+
+            should_execute_logic = model_loaded and polygons_loaded
+
+            # Render the item
+            # ---------------
+            imgui.menu_item('Fill all polygons with NaN', None, False, should_execute_logic)
+            if imgui.is_item_clicked() and should_execute_logic:
+                # Apply a transformation to all the polygons in the program
+                active_model_id = self._GUI_manager.get_active_model_id()
+                for polygon_id in polygon_id_list:
+                    transformation = FillNanTransformation(active_model_id,
+                                                           polygon_id)
+                    self._GUI_manager.change_points_height(transformation)
+
+            imgui.end_menu()
+
     def render(self) -> None:
         """
         Render the main menu bar on the screen.
@@ -162,13 +192,12 @@ class MainMenuBar(Frame):
         model_loaded = current_model is not None
 
         if imgui.begin_main_menu_bar():
-            # File menu
             self.__file_menu(model_loaded)
 
-            # Edit menu
             self.__edit_menu(model_loaded)
 
-            # View menu
             self.__view_menu(model_loaded)
+
+            self.__tools_menu(model_loaded)
 
             imgui.end_main_menu_bar()
