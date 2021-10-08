@@ -120,20 +120,6 @@ class Scene:
         self.__polygon_id_count: int = 0
         self.__model_id_count: int = 0
 
-    def add_model(self, model: Map2DModel) -> None:
-        """
-        Add a model to the hash of models.
-
-        This method should be called only when testing or experimenting, to load a new model to the program use the
-        method refresh_with_model_2d_async, that method will load the model on the scene and add it to the scene.
-
-        Args:
-            model: Model to add to the hashtable.
-
-        Returns: None
-        """
-        self.__model_hash[model.id] = model
-
     def add_new_vertex_to_polygon_using_map_coords(self,
                                                    x_coord: float,
                                                    y_coord: float,
@@ -500,7 +486,7 @@ class Scene:
                                      quality_maps: int = 3,
                                      then=lambda x: None) -> None:
         """
-        Refresh the scene, adding the new model to the hash of models and rendering it.
+        Refresh the scene, adding the new model to the scene.
 
         The color file must be in CPT format to create the model correctly.
 
@@ -573,7 +559,7 @@ class Scene:
             # ------------------------------
             self.update_projection_matrix_2D()
             self.__model_draw_priority.append(model.id)
-            self.add_model(model)
+            self.__model_hash[model.id] = model
 
             # Reset the zoom level, position and projection if there was no active model before.
             # ----------------------------------------------------------------------------------
