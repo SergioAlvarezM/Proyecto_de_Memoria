@@ -54,10 +54,10 @@ class Map2DModel(MapModel):
         self.__colors = []
         self.__height_limit = []
 
-        # grid values
-        self.__x = None
-        self.__y = None
-        self.__z = None
+        # Grid variables
+        # --------------
+        self.__x = None  # Values used for the x-axis of the model
+        self.__y = None  # Values used for the y-axis of the model
 
         # vertices values (used in the buffer)
         self.__vertices: np.ndarray = np.array([])
@@ -397,7 +397,8 @@ class Map2DModel(MapModel):
 
         Returns: numpy array with the values of the buffer.
         """
-        return self.__z
+        heights = self.get_vertices_array().reshape(self.get_vertices_shape())[:, :, 2]
+        return heights
 
     def get_height_on_coordinates(self, x_coordinate: float, y_coordinate: float) -> Union[float, None]:
         """
@@ -417,13 +418,13 @@ class Map2DModel(MapModel):
 
         # Security check
         # --------------
-        if self.__x is None or self.__y is None or self.__z is None:
+        if self.__x is None or self.__y is None:
             return None
 
         # Change the order of the arrays if they are not sorted with ascending values
         x_values = self.__x
         y_values = self.__y
-        z_values = self.__z
+        z_values = self.get_height_array()
 
         # Return None if the coordinate asked is outside of the model.
         if x_coordinate <= np.min(x_values) or x_coordinate >= np.max(x_values) or y_coordinate <= np.min(y_values) \
@@ -677,7 +678,6 @@ class Map2DModel(MapModel):
         # store the data for future operations.
         self.__x = np.array(x)
         self.__y = np.array(y)
-        self.__z = np.array(z)
 
         def parallel_routine():
             """
@@ -737,9 +737,6 @@ class Map2DModel(MapModel):
         # Update vertices of the model
         vertices = self.__vertices.reshape(self.get_vertices_shape())
         vertices[:, :, 2] = new_height
-
-        # Update utility variables
-        self.__z = vertices[:, :, 2]
 
         # Set the vertices in the buffer
         vertices = vertices.reshape(-1)
