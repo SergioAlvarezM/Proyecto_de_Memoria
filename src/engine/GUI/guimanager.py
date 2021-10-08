@@ -866,7 +866,7 @@ class GUIManager:
         """
         return self.__engine.get_zoom_level()
 
-    def interpolate_points(self, interpolation: 'Interpolation') -> None:
+    def apply_interpolation(self, interpolation: 'Interpolation') -> None:
         """
         Call the engine to interpolate the points.
 
@@ -875,7 +875,7 @@ class GUIManager:
 
         Returns: None
         """
-        self.__engine.interpolate_points(interpolation)
+        self.__engine.apply_interpolation(interpolation)
 
     def is_mouse_inside_frame(self) -> bool:
         """

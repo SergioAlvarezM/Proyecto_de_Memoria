@@ -57,7 +57,7 @@ class TestSmoothingInterpolation(ProgramTestCase):
         interpolation = SmoothInterpolation(self.engine.get_active_model_id(),
                                             self.engine.get_active_polygon_id(),
                                             2)
-        self.engine.interpolate_points(interpolation)
+        self.engine.apply_interpolation(interpolation)
 
         # export model to compare data
         self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
@@ -89,7 +89,7 @@ class TestSmoothingInterpolation(ProgramTestCase):
             interpolation = SmoothInterpolation(self.engine.get_active_model_id(),
                                                 self.engine.get_active_polygon_id(),
                                                 2)
-            self.engine.interpolate_points(interpolation)
+            self.engine.apply_interpolation(interpolation)
 
         # export model to compare data
         self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
@@ -141,7 +141,7 @@ class TestCubicInterpolation(ProgramTestCase):
         interpolation = CubicInterpolation(self.engine.get_active_model_id(),
                                            self.engine.get_active_polygon_id(),
                                            2)
-        self.engine.interpolate_points(interpolation)
+        self.engine.apply_interpolation(interpolation)
 
         # export model to compare data
         self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
@@ -189,7 +189,7 @@ class TestNearestInterpolation(ProgramTestCase):
         interpolation = NearestInterpolation(self.engine.get_active_model_id(),
                                              self.engine.get_active_polygon_id(),
                                              2)
-        self.engine.interpolate_points(interpolation)
+        self.engine.apply_interpolation(interpolation)
 
         # export model to compare data
         self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
@@ -237,7 +237,7 @@ class TestLinearInterpolation(ProgramTestCase):
         interpolation = LinearInterpolation(self.engine.get_active_model_id(),
                                             self.engine.get_active_polygon_id(),
                                             2)
-        self.engine.interpolate_points(interpolation)
+        self.engine.apply_interpolation(interpolation)
 
         # export model to compare data
         self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),

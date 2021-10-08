@@ -1190,10 +1190,9 @@ class Engine:
         return self.program.get_zoom_level()
 
     # noinspection PyUnresolvedReferences
-    def interpolate_points(self, interpolation: 'Interpolation') -> None:
+    def apply_interpolation(self, interpolation: 'Interpolation') -> None:
         """
         Ask the scene to modify the points of a model using the specified interpolation.
-
 
         Args:
             interpolation: Interpolation to use to modify the points of a model.
@@ -1202,7 +1201,7 @@ class Engine:
         """
         try:
             interpolation.initialize(self.scene)
-            self.scene.interpolate_points(interpolation)
+            self.scene.apply_interpolation(interpolation)
 
         except InterpolationError as e:
             if e.code == 1:

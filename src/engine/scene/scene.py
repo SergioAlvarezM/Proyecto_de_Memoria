@@ -1016,7 +1016,7 @@ class Scene:
         """
         return self.__engine.get_scene_setting_data()
 
-    def interpolate_points(self, interpolation: Interpolation) -> None:
+    def apply_interpolation(self, interpolation: Interpolation) -> None:
         """
         Interpolate the points at the exterior of the polygon using the given interpolation.
 
