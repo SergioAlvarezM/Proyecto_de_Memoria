@@ -60,7 +60,7 @@
                 + set_polygon_name(polygon_id, new_name)
                 + set_polygon_param(polygon_id, key, value)
                 + set_thread_task(parallel_task, then)
-                + transform_points(transformation)
+                + apply_transformation(transformation)
                 + update_3D_model(model_id)
                 + update_models_colors()
                 + update_models_projection_matrix()

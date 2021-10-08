@@ -1342,7 +1342,7 @@ class Scene:
         """
         self.__engine.set_thread_task(parallel_task, then)
 
-    def transform_points(self, transformation: 'Transformation') -> None:
+    def apply_transformation(self, transformation: 'Transformation') -> None:
         """
         Modify the points inside the polygon from the specified model using a linear transformation.
 

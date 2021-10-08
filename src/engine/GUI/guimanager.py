@@ -435,7 +435,7 @@ class GUIManager:
         """
         self.__engine.change_quality(quality)
 
-    def change_points_height(self, transformation: 'Transformation') -> None:
+    def apply_transformation(self, transformation: 'Transformation') -> None:
         """
         Call the engine to change the height of the points inside the specified polygon.
 
@@ -444,7 +444,7 @@ class GUIManager:
 
         Returns: None
         """
-        self.__engine.transform_points(transformation)
+        self.__engine.apply_transformation(transformation)
 
     def create_model_from_existent(self, base_model_id: str, second_model_id: str, model_name: str) -> None:
         """

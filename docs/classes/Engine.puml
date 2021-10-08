@@ -105,7 +105,7 @@ class Engine {
     + set_program_view_mode(mode)
     + set_task_with_loading_frame(task)
     + set_thread_task(parallel_task, then, parallel_task_args, then_task_args)
-    + transform_points(transformation)
+    + apply_transformation(transformation)
     + undo_action()
     + update_current_3D_model()
     + update_scene_models_colors()

@@ -1766,7 +1766,7 @@ class Engine:
             else:
                 then(*then_task_args)
 
-    def transform_points(self, transformation: 'Transformation') -> None:
+    def apply_transformation(self, transformation: 'Transformation') -> None:
         """
         Ask the scene to apply a transformation modifying the height of the model.
 
@@ -1784,7 +1784,7 @@ class Engine:
             # Run the transformation in a different thread
             # --------------------------------------------
             self.set_loading_message('Applying transformation.')
-            self.set_task_with_loading_frame(lambda: self.scene.transform_points(transformation))
+            self.set_task_with_loading_frame(lambda: self.scene.apply_transformation(transformation))
 
         except FilterError as e:
             if e.code == 0:

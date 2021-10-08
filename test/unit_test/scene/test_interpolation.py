@@ -135,7 +135,7 @@ class TestCubicInterpolation(ProgramTestCase):
                                               self.engine.get_active_polygon_id(),
                                               2000,
                                               3000)
-        self.engine.transform_points(transformation)
+        self.engine.apply_transformation(transformation)
 
         # apply interpolation
         interpolation = CubicInterpolation(self.engine.get_active_model_id(),
@@ -183,7 +183,7 @@ class TestNearestInterpolation(ProgramTestCase):
                                               self.engine.get_active_polygon_id(),
                                               2000,
                                               3000)
-        self.engine.transform_points(transformation)
+        self.engine.apply_transformation(transformation)
 
         # apply interpolation
         interpolation = NearestInterpolation(self.engine.get_active_model_id(),
@@ -231,7 +231,7 @@ class TestLinearInterpolation(ProgramTestCase):
                                               self.engine.get_active_polygon_id(),
                                               2000,
                                               3000)
-        self.engine.transform_points(transformation)
+        self.engine.apply_transformation(transformation)
 
         # apply interpolation
         interpolation = LinearInterpolation(self.engine.get_active_model_id(),
