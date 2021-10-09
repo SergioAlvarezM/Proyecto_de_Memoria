@@ -93,7 +93,7 @@ class FillNanTransformation(Transformation):
         flags = polygon_flags & filtered_flags
 
         # modify the height linearly if there are points to modify
-        if len(height_cut[filtered_flags]) > 0:
+        if len(height_cut[flags]) > 0:
             height_cut[flags] = np.nan
             height[min_y_index:max_y_index, min_x_index:max_x_index] = height_cut
 
