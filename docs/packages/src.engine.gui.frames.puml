@@ -35,6 +35,7 @@ src.engine.gui.frames.CombineMapModal -u-|> src.engine.gui.frames.Frame
     src.engine.gui.GUIManager o--o src.engine.gui.frames.Frame
 
     src.engine.gui.frames.CombineMapModal ..> src.engine.scene.map_transformation.MergeMapsTransformation
+    src.engine.gui.frames.MainMenuBar ..> src.engine.scene.map_transformation.FillNanMapTransformation
 !endsub
 
 hide members

@@ -9,19 +9,23 @@
 package src.engine.scene.map_transformation {
     class src.engine.scene.map_transformation.MapTransformation
     class src.engine.scene.map_transformation.MergeMapsTransformation
+    class src.engine.scene.map_transformation.FillNanMapTransformation
 }
 
 src.engine.scene.map_transformation.MergeMapsTransformation -u-|> src.engine.scene.map_transformation.MapTransformation
-
+src.engine.scene.map_transformation.FillNanMapTransformation -u-|> src.engine.scene.map_transformation.MapTransformation
 !endsub
 
 !startsub EXTERNAL
     src.engine.scene.map_transformation.MapTransformation <..> src.engine.scene.Scene
 
     src.engine.scene.map_transformation.MapTransformation ..> src.error.MapTransformationError
-    src.engine.scene.map_transformation.MergeMapsTransformation ..> src.error.MapTransformationError
 
+    src.engine.scene.map_transformation.MergeMapsTransformation ..> src.error.MapTransformationError
     src.engine.scene.map_transformation.MergeMapsTransformation ..> src.engine.scene.geometrical_operations
+
+    src.engine.scene.map_transformation.FillNanMapTransformation ..> src.error.MapTransformationError
+    src.engine.scene.map_transformation.FillNanMapTransformation ..> src.engine.scene.geometrical_operations
 !endsub
 
 
