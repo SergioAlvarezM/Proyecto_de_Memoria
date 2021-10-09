@@ -284,6 +284,12 @@ class Engine:
         except MapTransformationError as e:
             if e.code == 0:
                 self.set_modal_text('Error', 'Model specified can not be None.')
+            elif e.code == 1:
+                self.set_modal_text('Error', 'Model specified not found in the program.')
+            elif e.code == 2:
+                self.set_modal_text('Error', 'One polygon used for the transformation is not planar.')
+            else:
+                raise NotImplementedError(f'MapTransformationError with code {e.code} not handled.')
 
     def apply_transformation(self, transformation: 'Transformation') -> None:
         """

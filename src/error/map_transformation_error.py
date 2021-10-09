@@ -35,5 +35,6 @@ class MapTransformationError(SceneError):
 
         self.codes = {
             0: 'Model can not be None',
-            1: 'Model not found in the scene'
+            1: 'Model not found in the scene',
+            2: 'One polygon used in the transformation is not planar.'
         }
