@@ -74,5 +74,6 @@ class TestMergeMapsTransformation(ProgramTestCase):
             map_transformation_base_error.apply()
         self.assertEqual(1, e.exception.code, 'Exception error code is not 1')
 
+
 if __name__ == '__main__':
     unittest.main()
