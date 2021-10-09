@@ -25,13 +25,14 @@ import unittest
 import numpy as np
 
 from src.engine.scene.map_transformation.merge_maps_transformation import MergeMapsTransformation
+from src.error.map_transformation_error import MapTransformationError
 from src.input.NetCDF import read_info
 from test.test_case import ProgramTestCase
 
 
 class TestMergeMapsTransformation(ProgramTestCase):
 
-    def test_creation_model(self):
+    def test_merge_maps(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
                                            'resources/test_resources/netcdf/test_model_3.nc')
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
@@ -57,6 +58,21 @@ class TestMergeMapsTransformation(ProgramTestCase):
 
         os.remove('resources/test_resources/temp/combined_model_test.nc')
 
+    def test_bad_map_arguments(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_model_3.nc')
+
+        map_transformation_secondary_error = MergeMapsTransformation('0', '1')
+        with self.assertRaises(MapTransformationError) as e:
+            map_transformation_secondary_error.initialize(self.engine.scene)
+            map_transformation_secondary_error.apply()
+        self.assertEqual(1, e.exception.code, 'Exception error code is not 1.')
+
+        map_transformation_base_error = MergeMapsTransformation('1', '0')
+        with self.assertRaises(MapTransformationError) as e:
+            map_transformation_base_error.initialize(self.engine.scene)
+            map_transformation_base_error.apply()
+        self.assertEqual(1, e.exception.code, 'Exception error code is not 1')
 
 if __name__ == '__main__':
     unittest.main()

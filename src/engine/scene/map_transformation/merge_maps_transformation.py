@@ -59,6 +59,10 @@ class MergeMapsTransformation(MapTransformation):
         if self.__second_model_id is None:
             raise MapTransformationError(0)
 
+        model_id_list = scene.get_model_list()
+        if self.model_id not in model_id_list or self.__second_model_id not in model_id_list:
+            raise MapTransformationError(1)
+
         self.__base_model_vertices = scene.get_map2d_model_vertices_array(self.model_id)
         self.__second_model_vertices = scene.get_map2d_model_vertices_array(self.__second_model_id)
 

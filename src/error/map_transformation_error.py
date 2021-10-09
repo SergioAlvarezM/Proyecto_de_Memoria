@@ -35,4 +35,5 @@ class MapTransformationError(SceneError):
 
         self.codes = {
             0: 'Model can not be None',
+            1: 'Model not found in the scene'
         }
