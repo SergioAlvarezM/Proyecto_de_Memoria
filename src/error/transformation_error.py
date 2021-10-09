@@ -16,12 +16,12 @@
 # END GPL LICENSE BLOCK
 
 """
-File with the class ModelTransformationError, class to raise when there is an error in the transformation process.
+File with the class TransformationError, class to raise when there is an error in the transformation process.
 """
 from src.error.scene_error import SceneError
 
 
-class ModelTransformationError(SceneError):
+class TransformationError(SceneError):
     """
     Class to use when there is an error in the transformation process of a model.
     """
