@@ -172,6 +172,30 @@ class TestFillNanTransformation(ProgramTestCase):
             map_transformation.apply()
         self.assertEqual(1, e.exception.code, 'Exception code is not 1')
 
+    def test_no_polygons(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_1.nc')
+
+        map_transformation = FillNanMapTransformation(self.engine.get_active_model_id())
+        self.engine.apply_map_transformation(map_transformation)
+        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
+                                           'resources/test_resources/temp/fill_polygon_outside.nc')
+
+        x, y, z = read_info('resources/test_resources/temp/fill_polygon_outside.nc')
+        expected_x, expected_y, expected_z = read_info('resources/test_resources/netcdf/test_file_1.nc')
+
+        np.testing.assert_array_equal(expected_x,
+                                      x,
+                                      "x array stored is not the same as the expected.")
+        np.testing.assert_array_equal(expected_y,
+                                      y,
+                                      "y array stored is not the same as the expected.")
+        np.testing.assert_array_equal(expected_z,
+                                      z,
+                                      "heights stored are not equal to the expected.")
+
+        os.remove('resources/test_resources/temp/fill_polygon_outside.nc')
+
 
 if __name__ == '__main__':
     unittest.main()
