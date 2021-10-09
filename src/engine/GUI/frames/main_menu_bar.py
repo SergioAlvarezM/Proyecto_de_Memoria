@@ -161,17 +161,21 @@ class MainMenuBar(Frame):
         Args:
             model_loaded: Boolean indicating if there is a model loaded in the program.
         """
-        if imgui.begin_menu('Tools', True):
+        if imgui.begin_menu('Map Tools', True):
 
             # Get the information ready for the menu to work
             # ----------------------------------------------
             polygon_id_list = self._GUI_manager.get_polygon_id_list()
-            polygons_loaded = polygon_id_list != []
 
+            polygons_loaded = polygon_id_list != []
             should_execute_logic = model_loaded and polygons_loaded
 
-            # Render the item
-            # ---------------
+            # Render the elements of the tools
+            # --------------------------------
+            imgui.menu_item('Merge maps...', None, False, model_loaded)
+            if imgui.is_item_clicked() and model_loaded:
+                self._GUI_manager.open_combine_map_modal()
+
             imgui.menu_item('Fill all polygons with NaN', None, False, should_execute_logic)
             if imgui.is_item_clicked() and should_execute_logic:
                 # Apply a transformation to all the polygons in the program
