@@ -111,6 +111,7 @@ class CombineMapModal(Frame):
             _, self.__selected_map_2 = imgui.combo("Secondary model", self.__selected_map_2, self.__model_name_list)
 
             if imgui.button("Close", self.__button_width):
+                self._GUI_manager.set_controller_keyboard_callback_state(True)
                 imgui.close_current_popup()
 
             imgui.same_line()
@@ -119,6 +120,7 @@ class CombineMapModal(Frame):
                 map_transformation = MergeMapsTransformation(self.__model_id_list[self.__selected_map_1],
                                                              self.__model_id_list[self.__selected_map_2])
                 self._GUI_manager.apply_map_transformation(map_transformation)
+                self._GUI_manager.set_controller_keyboard_callback_state(True)
                 imgui.close_current_popup()
 
             imgui.end_popup()
