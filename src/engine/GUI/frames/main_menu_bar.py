@@ -181,6 +181,10 @@ class MainMenuBar(Frame):
                 map_transformation = FillNanMapTransformation(self._GUI_manager.get_active_model_id())
                 self._GUI_manager.apply_map_transformation(map_transformation)
 
+            imgui.menu_item('Interpolate NaN values', None, False, model_loaded)
+            if imgui.is_item_clicked() and model_loaded:
+                self._GUI_manager.open_interpolate_nan_map_modal()
+
             imgui.end_menu()
 
     def render(self) -> None:
