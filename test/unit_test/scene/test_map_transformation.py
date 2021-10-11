@@ -218,19 +218,8 @@ class TestInterpolateNanMapTransformation(ProgramTestCase):
 
         # Check values
         # ------------
-        x, y, z = read_info('resources/test_resources/temp/interpolate_nan_map_3.nc')
-        expected_x, expected_y, expected_z = read_info(
-            'resources/test_resources/expected_data/netcdf/expected_map_transformation_5.nc')
-
-        np.testing.assert_array_equal(expected_x,
-                                      x,
-                                      "x array stored is not the same as the expected.")
-        np.testing.assert_array_equal(expected_y,
-                                      y,
-                                      "y array stored is not the same as the expected.")
-        np.testing.assert_array_equal(expected_z,
-                                      z,
-                                      "heights stored are not equal to the expected.")
+        self.check_map_values('resources/test_resources/temp/interpolate_nan_map_3.nc',
+                              'resources/test_resources/expected_data/netcdf/expected_map_transformation_5.nc')
 
         os.remove('resources/test_resources/temp/interpolate_nan_map_3.nc')
 
@@ -245,19 +234,8 @@ class TestInterpolateNanMapTransformation(ProgramTestCase):
 
         # Check values
         # ------------
-        x, y, z = read_info('resources/test_resources/temp/interpolate_nan_map_2.nc')
-        expected_x, expected_y, expected_z = read_info(
-            'resources/test_resources/expected_data/netcdf/expected_map_transformation_4.nc')
-
-        np.testing.assert_array_equal(expected_x,
-                                      x,
-                                      "x array stored is not the same as the expected.")
-        np.testing.assert_array_equal(expected_y,
-                                      y,
-                                      "y array stored is not the same as the expected.")
-        np.testing.assert_array_equal(expected_z,
-                                      z,
-                                      "heights stored are not equal to the expected.")
+        self.check_map_values('resources/test_resources/temp/interpolate_nan_map_2.nc',
+                              'resources/test_resources/expected_data/netcdf/expected_map_transformation_4.nc')
 
         os.remove('resources/test_resources/temp/interpolate_nan_map_2.nc')
 
@@ -272,10 +250,25 @@ class TestInterpolateNanMapTransformation(ProgramTestCase):
 
         # Check values
         # ------------
-        x, y, z = read_info('resources/test_resources/temp/interpolate_nan_map_1.nc')
-        expected_x, expected_y, expected_z = read_info(
-            'resources/test_resources/expected_data/netcdf/expected_map_transformation_3.nc')
+        self.check_map_values('resources/test_resources/temp/interpolate_nan_map_1.nc',
+                              'resources/test_resources/expected_data/netcdf/expected_map_transformation_3.nc')
 
+        os.remove('resources/test_resources/temp/interpolate_nan_map_1.nc')
+
+    def check_map_values(self, generated_file: str, expected_data_file: str) -> None:
+        """
+        Check the data from a generated netcdf file and the data in the expected_data_file.
+
+        Asserts used are the ones defined in teh numpy.testing library.
+
+        Args:
+            generated_file: Netcdf file with the data to check.
+            expected_data_file: Netcdf file with the expected data from the generated file.
+
+        Returns: None
+        """
+        x, y, z = read_info(generated_file)
+        expected_x, expected_y, expected_z = read_info(expected_data_file)
         np.testing.assert_array_equal(expected_x,
                                       x,
                                       "x array stored is not the same as the expected.")
@@ -285,8 +278,6 @@ class TestInterpolateNanMapTransformation(ProgramTestCase):
         np.testing.assert_array_equal(expected_z,
                                       z,
                                       "heights stored are not equal to the expected.")
-
-        os.remove('resources/test_resources/temp/interpolate_nan_map_1.nc')
 
 
 if __name__ == '__main__':
