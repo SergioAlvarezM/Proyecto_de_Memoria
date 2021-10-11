@@ -14,6 +14,13 @@
 #      along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 #  END GPL LICENSE BLOCK
+
+"""
+Module with tests related to the Lines model of the program.
+
+Since it is necessary a Scene for the creation of the models, the tests need to create a full program to run.
+"""
+
 import unittest
 
 import numpy as np

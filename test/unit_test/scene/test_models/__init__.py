@@ -16,5 +16,5 @@
 #  END GPL LICENSE BLOCK
 
 """
-File Description.
+Module with tests related to the models defined in the program.
 """
