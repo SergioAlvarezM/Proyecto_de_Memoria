@@ -497,7 +497,7 @@ class GUIManager:
 
     def draw_frames(self) -> None:
         """
-        Draw the components of the GUI (This dont render them).
+        Draw the components of the GUI (This method do not render them).
 
         Returns: None
         """
