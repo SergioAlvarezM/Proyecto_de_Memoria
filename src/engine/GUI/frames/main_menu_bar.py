@@ -154,7 +154,7 @@ class MainMenuBar(Frame):
                 self._GUI_manager.undo_action()
             imgui.end_menu()
 
-    def __tools_menu(self, model_loaded: bool):
+    def __map_tools_menu(self, model_loaded: bool):
         """
         Options for the user to modify the maps.
 
@@ -198,6 +198,6 @@ class MainMenuBar(Frame):
 
             self.__view_menu(model_loaded)
 
-            self.__tools_menu(model_loaded)
+            self.__map_tools_menu(model_loaded)
 
             imgui.end_main_menu_bar()
