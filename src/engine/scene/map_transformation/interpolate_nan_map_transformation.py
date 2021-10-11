@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from src.engine.scene.scene import Scene
 
 
-class InterpolateNanTransformationType(Enum):
+class InterpolateNanMapTransformationType(Enum):
     """
     Enum that defines the types of interpolation that can be used in the transformation.
     """
@@ -47,7 +47,7 @@ class InterpolateNanMapTransformation(MapTransformation):
     """
 
     def __init__(self, model_id: str,
-                 interpolation_type: InterpolateNanTransformationType = InterpolateNanTransformationType.linear):
+                 interpolation_type: InterpolateNanMapTransformationType = InterpolateNanMapTransformationType.linear):
         """
         Constructor of the class.
         """
