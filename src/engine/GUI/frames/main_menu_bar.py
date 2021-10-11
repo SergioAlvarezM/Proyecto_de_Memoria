@@ -172,7 +172,7 @@ class MainMenuBar(Frame):
 
             # Render the elements of the tools
             # --------------------------------
-            imgui.menu_item('Merge maps...', None, False, model_loaded)
+            imgui.menu_item('Merge maps', None, False, model_loaded)
             if imgui.is_item_clicked() and model_loaded:
                 self._GUI_manager.open_combine_map_modal()
 
