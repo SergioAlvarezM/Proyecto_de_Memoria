@@ -85,8 +85,6 @@ class Frame:
         """
         Begin a new frame.
 
-        Begin a new frame to start rendering the content on the GUI.
-
         Initialize all the logic related to the fix/unfix and the necessary flags for the frame to be rendered correctly
         on the GUI.
 
