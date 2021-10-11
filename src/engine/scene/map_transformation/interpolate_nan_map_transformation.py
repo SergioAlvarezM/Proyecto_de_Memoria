@@ -18,6 +18,9 @@
 """
 File with the definition of the InterpolateNanMapTransformation class, class in charge of the interpolation of all the
 nan values that are present on a map.
+
+Module also defines an enum class with the types of interpolation that can be used when interpolating the nan values
+of the map.
 """
 from enum import Enum
 from typing import TYPE_CHECKING
