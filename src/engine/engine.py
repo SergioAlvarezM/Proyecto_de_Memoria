@@ -242,8 +242,12 @@ class Engine:
         Returns: None
         """
         try:
+            self.program.set_loading(True)
+            self.set_loading_message('Applying interpolation to the points.')
+
             interpolation.initialize(self.scene)
-            self.scene.apply_interpolation(interpolation)
+            self.scene.apply_interpolation(interpolation,
+                                           lambda: self.program.set_loading(False))
 
         except InterpolationError as e:
             if e.code == 1:
@@ -272,12 +276,8 @@ class Engine:
         Returns: None
         """
         try:
-            # Initialize the transformation
-            # -----------------------------
             map_transformation.initialize(self.scene)
 
-            # Run the transformation in a different thread
-            # --------------------------------------------
             self.set_loading_message('Applying map transformation.')
             self.set_task_with_loading_frame(lambda: self.scene.apply_map_transformation(map_transformation))
 
@@ -1738,17 +1738,6 @@ class Engine:
                                                        parallel_task_args,
                                                        then_task,
                                                        then_task_args)
-
-    def set_program_loading(self, new_state: bool = True) -> None:
-        """
-        Tell the program to set the loading state.
-
-        Args:
-            new_state: Boolean indicating the state of the program (if it is loading or not)
-
-        Returns: None
-        """
-        self.program.set_loading(new_state)
 
     def set_program_view_mode(self, mode: ViewMode = ViewMode.mode_2d) -> None:
         """
