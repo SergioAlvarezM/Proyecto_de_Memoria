@@ -407,6 +407,18 @@ class Engine:
                     return_values[0] = None
                     return_values[1] = None
 
+                elif e.code == 5:
+                    self.set_modal_text('Error',
+                                        'Polygon not found in the program.')
+                    return_values[0] = None
+                    return_values[1] = None
+
+                elif e.code == 7:
+                    self.set_modal_text('Error',
+                                        'Model not found.')
+                    return_values[0] = None
+                    return_values[1] = None
+
                 else:
                     raise e
 

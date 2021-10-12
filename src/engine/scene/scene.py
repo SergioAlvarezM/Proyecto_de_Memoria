@@ -324,6 +324,10 @@ class Scene:
 
         Returns: Tuple with the maximum and minimum height of the vertices inside the polygon.
         """
+        if model_id not in self.__model_hash:
+            raise SceneError(7)
+        if polygon_id not in self.__polygon_hash:
+            raise SceneError(5)
 
         # get the important information.
         model = self.__model_hash[model_id]
