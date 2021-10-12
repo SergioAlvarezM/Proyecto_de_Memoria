@@ -40,10 +40,10 @@ from src.engine.GUI.frames.main_menu_bar import MainMenuBar
 from src.engine.GUI.frames.modal.combine_map_modal import CombineMapModal
 from src.engine.GUI.frames.modal.confirmation_modal import ConfirmationModal
 from src.engine.GUI.frames.modal.interpolate_nan_map_modal import InterpolateNanMapModal
+from src.engine.GUI.frames.modal.text_modal import TextModal
 from src.engine.GUI.frames.mouse_coordinates import MouseCoordinates
 from src.engine.GUI.frames.polygon_information import PolygonInformation
 from src.engine.GUI.frames.test_window import TestWindow
-from src.engine.GUI.frames.text_modal import TextModal
 from src.engine.GUI.frames.tools.tools import Tools
 from src.engine.GUI.frames.tools_3D import Tools3D
 from src.engine.GUI.icon import Icon
@@ -1102,6 +1102,7 @@ class GUIManager:
             msg: message to show in the modal
         """
         log.debug("Setting modal text")
+        self.__text_modal.should_show = True
         self.__text_modal.set_modal_text(modal_title, msg)
 
     def process_input(self) -> None:
