@@ -67,14 +67,6 @@ class CombineMapModal(Modal):
             self.__selected_map_1 = 0
             self.__selected_map_2 = 0
 
-    def render(self) -> None:
-        """
-        Do nothing since the frame should not be rendered in each frame.
-
-        Returns: None
-        """
-        pass
-
     def post_render(self) -> None:
         """
         Define and show the modal if the modal was set to show.

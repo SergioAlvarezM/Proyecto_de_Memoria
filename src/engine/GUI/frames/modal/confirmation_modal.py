@@ -56,12 +56,6 @@ class ConfirmationModal(Modal):
         self.__msg = "This is a mock message to show in the confirmation modal. If you're watching this" \
                      " then there is a problem in the program."
 
-    def render(self) -> None:
-        """
-        Render method. Do nothing.
-        """
-        pass
-
     def post_render(self) -> None:
         """
         Render a modal with the specified text.
