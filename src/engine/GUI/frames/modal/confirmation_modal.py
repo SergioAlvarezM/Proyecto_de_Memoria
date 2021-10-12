@@ -1,3 +1,20 @@
+#  BEGIN GPL LICENSE BLOCK
+#
+#      This program is free software: you can redistribute it and/or modify
+#      it under the terms of the GNU General Public License as published by
+#      the Free Software Foundation, either version 3 of the License, or
+#      (at your option) any later version.
+#
+#      This program is distributed in the hope that it will be useful,
+#      but WITHOUT ANY WARRANTY; without even the implied warranty of
+#      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#      GNU General Public License for more details.
+#
+#      You should have received a copy of the GNU General Public License
+#      along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+#  END GPL LICENSE BLOCK
+
 # BEGIN GPL LICENSE BLOCK
 #
 #     This program is free software: you can redistribute it and/or modify
@@ -23,7 +40,7 @@ from typing import TYPE_CHECKING
 
 import imgui
 
-from src.engine.GUI.frames.frame import Frame
+from src.engine.GUI.frames.modal.modal import Modal
 from src.utils import get_logger
 
 if TYPE_CHECKING:
@@ -32,7 +49,7 @@ if TYPE_CHECKING:
 log = get_logger(module="CONFIRMATION_MODAL")
 
 
-class ConfirmationModal(Frame):
+class ConfirmationModal(Modal):
     """
     Class to render a modal in the application with a specified text.
     """
@@ -49,17 +66,12 @@ class ConfirmationModal(Frame):
         self.__yes_func = lambda: log.debug('Called yes function.')
         self.__no_func = lambda: log.debug('Called no function.')
 
-        self.__windows_width = 300
-        self.__button_width = self.__windows_width / 2 - 12
+        self.size = (300, -1)
+        self.__button_width = self.size[0] / 2 - 12
 
-        self.__should_show = False
         self.__modal_title = "Confirmation Modal"
         self.__msg = "This is a mock message to show in the confirmation modal. If you're watching this" \
                      " then there is a problem in the program."
-
-        # auxiliary variables
-        # -------------------
-        self.__tool_before_pop_up = None
 
     def render(self) -> None:
         """
@@ -72,58 +84,17 @@ class ConfirmationModal(Frame):
         Render a modal with the specified text.
         Returns: None
         """
-        imgui.set_next_window_size(self.__windows_width, -1)
-        imgui.set_next_window_position(imgui.get_io().display_size.x * 0.5,
-                                       imgui.get_io().display_size.y * 0.5,
-                                       imgui.ALWAYS,
-                                       0.5,
-                                       0.5)
-
-        if self.__should_show:
-            log.debug('Opened')
-
-            # stores the active tool and deactivate it
-            # ----------------------------------------
-            self.__tool_before_pop_up = self._GUI_manager.get_active_tool()
-            self._GUI_manager.set_active_tool(None)
-
-            # open the pop up and size it
-            # ---------------------------
-            imgui.open_popup(self.__modal_title)
-            self._GUI_manager.set_controller_keyboard_callback_state(False)
-            self.__should_show = False
-
-        if imgui.begin_popup_modal(self.__modal_title)[0]:
+        if self.begin_modal(self.__modal_title):
             imgui.text_wrapped(self.__msg)
 
             if imgui.button("yes", self.__button_width):
-                # call the function stored previously
-                # -----------------------------------
                 self.__yes_func()
-
-                # return the original tool to the program
-                # ---------------------------------------
-                self._GUI_manager.set_active_tool(self.__tool_before_pop_up)
-
-                # close the pop up
-                # ----------------
-                imgui.close_current_popup()
-                self._GUI_manager.set_controller_keyboard_callback_state(True)
+                self.close_modal()
 
             imgui.same_line()
             if imgui.button("no", self.__button_width):
-                # call the function stored previously
-                # -----------------------------------
                 self.__no_func()
-
-                # return the original tool to the program
-                # ---------------------------------------
-                self._GUI_manager.set_active_tool(self.__tool_before_pop_up)
-
-                # close the pop up
-                # ----------------
-                imgui.close_current_popup()
-                self._GUI_manager.set_controller_keyboard_callback_state(True)
+                self.close_modal()
 
             imgui.end_popup()
 
@@ -140,7 +111,6 @@ class ConfirmationModal(Frame):
         Returns: None
         """
         log.debug("Modal set to show")
-        self.__should_show = True
         self.__modal_title = modal_title
         self.__msg = msg
 
