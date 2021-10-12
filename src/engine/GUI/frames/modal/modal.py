@@ -38,16 +38,6 @@ class Modal(Frame):
         self.__should_show = False
         self.__tool_before_pop_up: Union[str, None] = None
 
-    @property
-    def should_show(self) -> bool:
-        """Get if the frame should be shown on the program."""
-        return self.__should_show
-
-    @should_show.setter
-    def should_show(self, value: bool) -> None:
-        """Specify if the frame should be shown on the program."""
-        self.__should_show = value
-
     def _begin_modal(self, modal_title: str) -> bool:
         """
         Begin a new modal.
@@ -67,7 +57,7 @@ class Modal(Frame):
 
         Returns: Boolean indicating if the frame will be rendered.
         """
-        if self.should_show:
+        if self.__should_show:
             # Ask imgui to open the popup modal
             imgui.open_popup(modal_title)
 
@@ -79,7 +69,7 @@ class Modal(Frame):
             self._GUI_manager.set_controller_keyboard_callback_state(False)
 
             # Return the variable should_show to false since the modal was already opened
-            self.should_show = False
+            self.__should_show = False
 
         # Fix the size for the frame to be shown in the center of the program
         # -------------------------------------------------------------------
@@ -104,6 +94,14 @@ class Modal(Frame):
         self._GUI_manager.set_active_tool(self.__tool_before_pop_up)
         self._GUI_manager.set_controller_keyboard_callback_state(True)
         self.should_show = False
+
+    def open_modal(self) -> None:
+        """
+        Open the modal on the program.
+
+        Returns: None
+        """
+        self.__should_show = True
 
     def render(self) -> None:
         """

@@ -1069,7 +1069,7 @@ class GUIManager:
 
         Returns: None
         """
-        self.__interpolate_nan_map_modal.should_show = True
+        self.__interpolate_nan_map_modal.open_modal()
 
     def open_confirmation_modal(self, modal_title: str, msg: str, yes_function: callable,
                                 no_function: callable) -> None:
@@ -1085,7 +1085,7 @@ class GUIManager:
 
         Returns: None
         """
-        self.__confirmation_modal.should_show = True
+        self.__confirmation_modal.open_modal()
         self.__confirmation_modal.set_confirmation_text(modal_title,
                                                         msg,
                                                         yes_function,
@@ -1102,7 +1102,7 @@ class GUIManager:
             msg: message to show in the modal
         """
         log.debug("Setting modal text")
-        self.__text_modal.should_show = True
+        self.__text_modal.open_modal()
         self.__text_modal.set_modal_text(modal_title, msg)
 
     def process_input(self) -> None:
