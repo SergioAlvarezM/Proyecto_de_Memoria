@@ -34,12 +34,12 @@ import OpenGL.constant as OGLConstant
 import imgui
 from imgui.integrations.glfw import GlfwRenderer
 
-from src.engine.GUI.frames.combine_map_modal import CombineMapModal
 from src.engine.GUI.frames.confirmation_modal import ConfirmationModal
 from src.engine.GUI.frames.debug import Debug
 from src.engine.GUI.frames.interpolate_nan_map_modal import InterpolateNanMapModal
 from src.engine.GUI.frames.loading import Loading
 from src.engine.GUI.frames.main_menu_bar import MainMenuBar
+from src.engine.GUI.frames.modal.combine_map_modal import CombineMapModal
 from src.engine.GUI.frames.mouse_coordinates import MouseCoordinates
 from src.engine.GUI.frames.polygon_information import PolygonInformation
 from src.engine.GUI.frames.test_window import TestWindow
