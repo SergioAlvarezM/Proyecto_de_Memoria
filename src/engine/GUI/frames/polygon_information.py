@@ -86,7 +86,7 @@ class PolygonInformation(Frame):
             # -----------
             self.position = (self._GUI_manager.get_window_width() - self.size[0],
                              self._GUI_manager.get_window_height() - self.size[1])
-            self.begin_frame('Polygon Information')
+            self._begin_frame('Polygon Information')
 
             # --------------------------------------------
             # First row, show the data titles in bold font
@@ -150,7 +150,7 @@ class PolygonInformation(Frame):
             if imgui.button("Add New", -1):
                 self.__should_open_add_dialog = True
 
-            self.end_frame()
+            self._end_frame()
 
     def post_render(self) -> None:
         """

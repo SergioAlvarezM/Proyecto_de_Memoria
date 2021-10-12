@@ -66,7 +66,7 @@ class MouseCoordinates(Frame):
 
             # Set the transparency and configure the frame before rendering it
             imgui.set_next_window_bg_alpha(self.__alpha_value)
-            self.begin_frame(self.__frame_name, imgui.WINDOW_NO_TITLE_BAR)
+            self._begin_frame(self.__frame_name, imgui.WINDOW_NO_TITLE_BAR)
 
             # Round the values obtained to show only two decimals
             map_coordinates[0] = round(map_coordinates[0], 2)
@@ -81,4 +81,4 @@ class MouseCoordinates(Frame):
                 imgui.text(f'Mouse Coordinates: ({map_coordinates[0]}, {map_coordinates[1]})')
 
             # Close the frame
-            self.end_frame()
+            self._end_frame()

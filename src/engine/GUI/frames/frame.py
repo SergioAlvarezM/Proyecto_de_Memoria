@@ -81,7 +81,7 @@ class Frame:
         """
         self.__size = new_size
 
-    def begin_frame(self, frame_name: str, additional_flags: int = None):
+    def _begin_frame(self, frame_name: str, additional_flags: int = None):
         """
         Begin a new frame.
 
@@ -109,7 +109,7 @@ class Frame:
                         False,
                         flags)
 
-    def end_frame(self):
+    def _end_frame(self):
         """
         End a frame.
 

@@ -65,7 +65,7 @@ class Tools3D(Frame):
         # -----------------------------------------------------------------------------
         self.size = (self._GUI_manager.get_left_frame_width(),
                      self._GUI_manager.get_window_height() - self._GUI_manager.get_main_menu_bar_height())
-        self.begin_frame('Tools 3D')
+        self._begin_frame('Tools 3D')
 
         # ------------
         # Camera Tools
@@ -148,4 +148,4 @@ class Tools3D(Frame):
             )
             self._GUI_manager.update_current_3D_model()
 
-        self.end_frame()
+        self._end_frame()

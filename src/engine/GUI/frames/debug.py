@@ -63,7 +63,7 @@ class Debug(Frame):
         memory_usage_mb = (psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2)
         # cpu_percent = psutil.cpu_percent()
 
-        self.begin_frame('Debug')
+        self._begin_frame('Debug')
         imgui.text(f"Zoom level: {zoom_level}")
         imgui.text(f"Map position: {position}")
         imgui.separator()
@@ -91,4 +91,4 @@ class Debug(Frame):
         #                           self.__height,
         #                           0)
 
-        self.end_frame()
+        self._end_frame()

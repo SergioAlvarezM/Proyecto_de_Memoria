@@ -132,7 +132,7 @@ class Tools(Frame):
         # --------------------------------------
         self.size = (self._GUI_manager.get_left_frame_width(),
                      self._GUI_manager.get_window_height() - self._GUI_manager.get_main_menu_bar_height())
-        self.begin_frame('Tools')
+        self._begin_frame('Tools')
 
         # Show the active tool on the application
         # ---------------------------------------
@@ -157,4 +157,4 @@ class Tools(Frame):
         imgui.separator()
         self.__map_tools.render()
 
-        self.end_frame()
+        self._end_frame()
