@@ -48,17 +48,17 @@ class Modal(Frame):
         """Specify if the frame should be shown on the program."""
         self.__should_show = value
 
-    def begin_modal(self, modal_title: str) -> bool:
+    def _begin_modal(self, modal_title: str) -> bool:
         """
         Begin a new modal.
 
         Open a new modal, executing all the logic related to the opening of a new modal.
 
         Example:
-            if self.begin_modal('my_new_modal'):
+            if self._begin_modal('my_new_modal'):
                 ...
                 if button(...):
-                    self.close_modal()
+                    self._close_modal()
 
                 imgui.end_popup()
 
@@ -91,7 +91,7 @@ class Modal(Frame):
                                        0.5)
         return imgui.begin_popup_modal(modal_title)[0]
 
-    def close_modal(self) -> None:
+    def _close_modal(self) -> None:
         """
         Close the current active modal.
 

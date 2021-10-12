@@ -60,14 +60,14 @@ class InterpolateNanMapModal(Modal):
 
         Returns: None
         """
-        if self.begin_modal(self.__modal_title):
+        if self._begin_modal(self.__modal_title):
 
             _, self.__interpolation_selected = imgui.combo('Type of interpolation',
                                                            self.__interpolation_selected,
                                                            self.__interpolation_type_options)
 
             if imgui.button("Close", self.__button_width):
-                self.close_modal()
+                self._close_modal()
 
             imgui.same_line()
             if imgui.button("Interpolate", self.__button_width):
@@ -76,6 +76,6 @@ class InterpolateNanMapModal(Modal):
                     self.__interpolation_type_values[self.__interpolation_selected])
 
                 self._GUI_manager.apply_map_transformation(map_transformation)
-                self.close_modal()
+                self._close_modal()
 
             imgui.end_popup()

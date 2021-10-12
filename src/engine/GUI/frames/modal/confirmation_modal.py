@@ -61,17 +61,17 @@ class ConfirmationModal(Modal):
         Render a modal with the specified text.
         Returns: None
         """
-        if self.begin_modal(self.__modal_title):
+        if self._begin_modal(self.__modal_title):
             imgui.text_wrapped(self.__msg)
 
             if imgui.button("yes", self.__button_width):
                 self.__yes_func()
-                self.close_modal()
+                self._close_modal()
 
             imgui.same_line()
             if imgui.button("no", self.__button_width):
                 self.__no_func()
-                self.close_modal()
+                self._close_modal()
 
             imgui.end_popup()
 

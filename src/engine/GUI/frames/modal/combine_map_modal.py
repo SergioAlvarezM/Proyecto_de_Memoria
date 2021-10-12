@@ -73,7 +73,7 @@ class CombineMapModal(Modal):
 
         Returns: None
         """
-        if self.begin_modal(self.__modal_title):
+        if self._begin_modal(self.__modal_title):
             imgui.text("Select the maps to merge:")
             _, self.__selected_map_1 = imgui.combo("Base model", self.__selected_map_1, self.__model_name_list)
             _, self.__selected_map_2 = imgui.combo("Secondary model", self.__selected_map_2, self.__model_name_list)
@@ -87,6 +87,6 @@ class CombineMapModal(Modal):
                 map_transformation = MergeMapsTransformation(self.__model_id_list[self.__selected_map_1],
                                                              self.__model_id_list[self.__selected_map_2])
                 self._GUI_manager.apply_map_transformation(map_transformation)
-                self.close_modal()
+                self._close_modal()
 
             imgui.end_popup()

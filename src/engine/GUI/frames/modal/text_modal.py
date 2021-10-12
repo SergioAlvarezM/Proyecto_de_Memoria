@@ -64,11 +64,11 @@ class TextModal(Modal):
 
         Returns: None
         """
-        if self.begin_modal(self.__modal_title):
+        if self._begin_modal(self.__modal_title):
             imgui.text_wrapped(self.__msg)
 
             if imgui.button("Close", self.size[0] - self.__margin_button, self.__button_height):
-                self.close_modal()
+                self._close_modal()
 
             imgui.end_popup()
 
