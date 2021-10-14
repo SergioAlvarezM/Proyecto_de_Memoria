@@ -658,17 +658,17 @@ class Scene:
 
     def remove_polygon_by_id(self, polygon_id: str) -> None:
         """
-        Delete the polygon with the specified id from the scene.
+        Remove the polygon with the specified id from the scene.
 
         Args:
-            polygon_id: Id to use to delete.
+            polygon_id: Id to use to removed.
 
         Returns: None
         """
         if polygon_id in self.__polygon_hash:
             self.__polygon_hash.pop(polygon_id)
 
-        # delete the interpolation area if they have
+        # remove the interpolation area if they have
         if polygon_id in self.__interpolation_area_hash:
             self.__interpolation_area_hash.pop(polygon_id)
 
@@ -678,11 +678,11 @@ class Scene:
 
     def remove_polygon_param(self, polygon_id: str, key: str) -> None:
         """
-        Delete a parameter from the polygon.
+        Remove a parameter from the polygon.
 
         Args:
             polygon_id: ID of the polygon.
-            key: Key to be deleted.
+            key: Key to be removed.
 
         Returns: None
         """
@@ -1228,7 +1228,7 @@ class Scene:
 
     def remove_model(self, id_model: str) -> None:
         """
-        Delete the model with the specified id.
+        Remove the model with the specified id.
 
         Args:
             id_model: Id of the model to remove.
@@ -1242,7 +1242,7 @@ class Scene:
 
     def remove_model_3d(self, id_model: str) -> None:
         """
-        Delete the 3D model with the specified id.
+        Remove the 3D model with the specified id.
 
         Do nothing if the model does not exists.
 
