@@ -477,6 +477,8 @@ class TestNanConvolutionMapTransformation(ProgramTestCase):
 
         np.testing.assert_array_equal(z_expected, z, 'Array generated is not equal to the expected.')
 
+        os.remove('resources/test_resources/temp/nan_convolution_1.nc')
+
     def test_simple_model_2(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
                                            'resources/test_resources/netcdf/test_nan_convolution.nc')
@@ -491,6 +493,61 @@ class TestNanConvolutionMapTransformation(ProgramTestCase):
         _, _, z_expected = read_info('resources/test_resources/expected_data/netcdf/expected_map_transformation_7.nc')
 
         np.testing.assert_array_equal(z_expected, z, 'Array generated is not equal to the expected.')
+
+        os.remove('resources/test_resources/temp/nan_convolution_2.nc')
+
+    def test_no_nan_values(self):
+        # Initialize data
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_1.nc')
+
+        # Apply changes
+        map_transformation = NanConvolutionMapTransformation(self.engine.get_active_model_id(),
+                                                             5,
+                                                             1)
+        self.engine.apply_map_transformation(map_transformation)
+        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
+                                           'resources/test_resources/temp/nan_convolution_4.nc')
+
+        # Check data validity
+        _, _, z = read_info('resources/test_resources/temp/nan_convolution_4.nc')
+        _, _, z_expected = read_info('resources/test_resources/netcdf/test_file_1.nc')
+
+        np.testing.assert_array_equal(z_expected, z,
+                                      'Heights were modified when no nan values were present on the map.')
+
+        os.remove('resources/test_resources/temp/nan_convolution_4.nc')
+
+    def test_only_nan_values(self):
+        # Initialize data
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_data_nan_only.nc')
+
+        # Apply changes
+        map_transformation = NanConvolutionMapTransformation(self.engine.get_active_model_id(),
+                                                             5,
+                                                             1)
+        self.engine.apply_map_transformation(map_transformation)
+        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
+                                           'resources/test_resources/temp/nan_convolution_3.nc')
+
+        # Check data validity
+        _, _, z = read_info('resources/test_resources/temp/nan_convolution_3.nc')
+        _, _, z_expected = read_info('resources/test_resources/netcdf/test_data_nan_only.nc')
+
+        np.testing.assert_array_equal(z_expected, z, 'Heights were modified when there were only nans on the map '
+                                                     '(where did the method got the pivot information?).')
+
+        os.remove('resources/test_resources/temp/nan_convolution_3.nc')
+
+    def test_bad_arguments(self):
+        map_transformation = NanConvolutionMapTransformation('NonExistentModel',
+                                                             5,
+                                                             0.5)
+        with self.assertRaises(MapTransformationError) as e:
+            map_transformation.initialize(self.engine.scene)
+            map_transformation.apply()
+        self.assertEqual(1, e.exception.code, 'Code exception is not 1.')
 
 
 if __name__ == '__main__':
