@@ -98,7 +98,6 @@ class TestTransformation(ProgramTestCase):
     def test_not_specified_polygon(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
                                            'resources/test_resources/netcdf/test_file_50_50.nc')
-        polygon = self.engine.create_new_polygon()
 
         # noinspection PyTypeChecker
         transformation = Transformation(self.engine.get_active_model_id(),
