@@ -63,6 +63,30 @@ class TestMergeMapsTransformation(ProgramTestCase):
 
         os.remove('resources/test_resources/temp/combined_model_test.nc')
 
+    def test_same_map(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+
+        map_transformation = MergeMapsTransformation('0', '0')
+        self.engine.apply_map_transformation(map_transformation)
+        self.engine.export_model_as_netcdf('0', 'resources/test_resources/temp/combined_same_map.nc')
+
+        x, y, z = read_info('resources/test_resources/temp/combined_same_map.nc')
+        expected_x, expected_y, expected_z = read_info(
+            'resources/test_resources/netcdf/test_file_50_50.nc')
+
+        np.testing.assert_array_equal(expected_x,
+                                      x,
+                                      "x array stored is not the same as the expected.")
+        np.testing.assert_array_equal(expected_y,
+                                      y,
+                                      "y array stored is not the same as the expected.")
+        np.testing.assert_array_equal(expected_z,
+                                      z,
+                                      "heights stored are not equal to the expected.")
+
+        os.remove('resources/test_resources/temp/combined_same_map.nc')
+
     def test_bad_map_arguments(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
                                            'resources/test_resources/netcdf/test_model_3.nc')
