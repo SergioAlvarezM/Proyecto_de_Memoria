@@ -69,6 +69,37 @@ class TestLinearTransformation(ProgramTestCase):
 
         os.remove('resources/test_resources/temp/temp_transformation_1.nc')
 
+    def test_polygon_outside_map(self):
+        # Setup the data for the testing
+        # ------------------------------
+        self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+
+        polygon_id = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon_id)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(-500, -500)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(-510, -500)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(-510, -510)
+
+        # Apply transformation with filters
+        # ---------------------------------
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              self.engine.get_active_polygon_id(),
+                                              2000,
+                                              3000)
+        self.engine.apply_transformation(transformation)
+        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
+                                           'resources/test_resources/temp/temp_transformation_2')
+
+        # Read data and compare
+        # ---------------------
+        info_written = read_info('resources/test_resources/temp/temp_transformation_2.nc')
+        info_expected = read_info('resources/test_resources/netcdf/test_file_50_50.nc')
+        np.testing.assert_array_almost_equal(info_written[2], info_expected[2], 3,
+                                             'Heights were modified when polygon was outside of the map.')
+
+        os.remove('resources/test_resources/temp/temp_transformation_2.nc')
+
 
 class TestFillNanTransformation(ProgramTestCase):
 
