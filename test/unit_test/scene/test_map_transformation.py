@@ -419,6 +419,22 @@ class TestInterpolateNanMapTransformation(ProgramTestCase):
             map_transformation.apply()
         self.assertEqual(1, e.exception.code, 'Code exception is not 1')
 
+    def test_only_nan_values(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_data_nan_only.nc')
+        # Apply transformation
+        # --------------------
+        map_transformation = InterpolateNanMapTransformation(self.engine.get_active_model_id(),
+                                                             InterpolateNanMapTransformationType.linear)
+        self.engine.apply_map_transformation(map_transformation)
+        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
+                                           'resources/test_resources/temp/interpolate_nan_map_7.nc')
+        # Check values
+        # ------------
+        self.check_map_values('resources/test_resources/temp/interpolate_nan_map_7.nc',
+                              'resources/test_resources/netcdf/test_data_nan_only.nc')
+        os.remove('resources/test_resources/temp/interpolate_nan_map_7.nc')
+
     def check_map_values(self, generated_file: str, expected_data_file: str) -> None:
         """
         Check the data from a generated netcdf file and the data in the expected_data_file.
