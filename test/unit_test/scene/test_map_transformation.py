@@ -39,9 +39,9 @@ class TestMergeMapsTransformation(ProgramTestCase):
 
     def test_merge_maps(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
-                                           'resources/test_resources/netcdf/test_model_3.nc')
+                                           'resources/test_resources/netcdf/test_data_nan_values.nc')
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
-                                           'resources/test_resources/netcdf/test_model_4.nc')
+                                           'resources/test_resources/netcdf/test_file_2.nc')
 
         map_transformation = MergeMapsTransformation('0', '1')
         self.engine.apply_map_transformation(map_transformation)
@@ -89,7 +89,7 @@ class TestMergeMapsTransformation(ProgramTestCase):
 
     def test_bad_map_arguments(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
-                                           'resources/test_resources/netcdf/test_model_3.nc')
+                                           'resources/test_resources/netcdf/test_data_nan_values.nc')
 
         map_transformation_secondary_error = MergeMapsTransformation('0', '1')
         with self.assertRaises(MapTransformationError) as e:
