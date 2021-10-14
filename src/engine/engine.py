@@ -318,18 +318,18 @@ class Engine:
                                     'Polygon in filter can not be None.')
 
         except TransformationError as e:
-            if e.code == 4:
-                self.set_modal_text('Error',
-                                    'The current model is not supported to use to update the '
-                                    'height of the vertices, try using another type of '
-                                    'model.')
-            elif e.code == 2:
+            if e.code == 2:
                 self.set_modal_text('Error',
                                     'The polygon must have at least 3 points to be able to '
                                     'modify the heights.')
             elif e.code == 3:
                 self.set_modal_text('Error',
                                     'The polygon is not planar. Try using a planar polygon.')
+            elif e.code == 4:
+                self.set_modal_text('Error',
+                                    'The current model is not supported to use to update the '
+                                    'height of the vertices, try using another type of '
+                                    'model.')
             elif e.code == 6:
                 self.set_modal_text('Error',
                                     'Polygon not selected or invalid in filter.')
