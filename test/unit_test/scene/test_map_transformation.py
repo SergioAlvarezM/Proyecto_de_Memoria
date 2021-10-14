@@ -411,6 +411,14 @@ class TestInterpolateNanMapTransformation(ProgramTestCase):
 
         os.remove('resources/test_resources/temp/interpolate_nan_map_6.nc')
 
+    def test_bad_arguments(self):
+        map_transformation = InterpolateNanMapTransformation('NonExistentModel',
+                                                             InterpolateNanMapTransformationType.linear)
+        with self.assertRaises(MapTransformationError) as e:
+            map_transformation.initialize(self.engine.scene)
+            map_transformation.apply()
+        self.assertEqual(1, e.exception.code, 'Code exception is not 1')
+
     def check_map_values(self, generated_file: str, expected_data_file: str) -> None:
         """
         Check the data from a generated netcdf file and the data in the expected_data_file.
