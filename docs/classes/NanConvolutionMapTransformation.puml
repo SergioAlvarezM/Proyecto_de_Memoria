@@ -1,7 +1,7 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-class MapConvolutionMapTransformation {
+class NanConvolutionMapTransformation {
     - __nan_percentage_limit: float
     - __kernel_diameter: int
     - __model_vertices: array
