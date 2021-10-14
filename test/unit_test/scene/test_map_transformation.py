@@ -137,7 +137,78 @@ class TestFillNanTransformation(ProgramTestCase):
 
         os.remove('resources/test_resources/temp/fill_nan_one_polygon.nc')
 
-    def test_fill_nan_multiple_polygon(self):
+    def test_polygon_no_points(self):
+        # Initialize the test
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        self.engine.create_new_polygon()
+        self.engine.create_new_polygon()
+        self.engine.create_new_polygon()
+
+        # Apply logic
+        map_transformation = FillNanMapTransformation(self.engine.get_active_model_id())
+        self.engine.apply_map_transformation(map_transformation)
+        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
+                                           'resources/test_resources/temp/polygon_no_points.nc')
+
+        # Check values
+        x, y, z = read_info('resources/test_resources/temp/polygon_no_points.nc')
+        expected_x, expected_y, expected_z = read_info('resources/test_resources/netcdf/test_file_50_50.nc')
+
+        np.testing.assert_array_equal(expected_x,
+                                      x,
+                                      "x array stored is not the same as the expected.")
+        np.testing.assert_array_equal(expected_y,
+                                      y,
+                                      "y array stored is not the same as the expected.")
+        np.testing.assert_array_equal(expected_z,
+                                      z,
+                                      "heights stored are not equal to the expected.")
+
+        os.remove('resources/test_resources/temp/polygon_no_points.nc')
+
+    def test_polygon_not_well_defined(self):
+        # Initialize the test
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        pol_no_points = self.engine.create_new_polygon()
+        pol_one_point = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(pol_one_point)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(25, 25)
+        pol_two_points = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(pol_two_points)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 20)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(30, 30)
+        pol_not_planar = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(pol_not_planar)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 20)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 20)
+
+        # Apply logic
+        map_transformation = FillNanMapTransformation(self.engine.get_active_model_id())
+        self.engine.apply_map_transformation(map_transformation)
+        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
+                                           'resources/test_resources/temp/polygon_no_points.nc')
+
+        # Check values
+        x, y, z = read_info('resources/test_resources/temp/polygon_no_points.nc')
+        expected_x, expected_y, expected_z = read_info('resources/test_resources/netcdf/test_file_50_50.nc')
+
+        np.testing.assert_array_equal(expected_x,
+                                      x,
+                                      "x array stored is not the same as the expected.")
+        np.testing.assert_array_equal(expected_y,
+                                      y,
+                                      "y array stored is not the same as the expected.")
+        np.testing.assert_array_equal(expected_z,
+                                      z,
+                                      "heights stored are not equal to the expected.")
+
+        os.remove('resources/test_resources/temp/polygon_no_points.nc')
+
+    def test_multiple_polygons(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
                                            'resources/test_resources/netcdf/test_file_1.nc')
         self.engine.create_polygon_from_file('resources/test_resources/polygons/shape_many_polygons.shp')
@@ -163,7 +234,7 @@ class TestFillNanTransformation(ProgramTestCase):
 
         os.remove('resources/test_resources/temp/fill_nan_multiple_polygon.nc')
 
-    def test_fill_nan_polygon_outside(self):
+    def test_polygon_outside(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
                                            'resources/test_resources/netcdf/test_file_1.nc')
 
