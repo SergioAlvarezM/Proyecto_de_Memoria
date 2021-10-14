@@ -25,8 +25,89 @@ import numpy as np
 
 from src.engine.scene.transformation.fill_nan_transformation import FillNanTransformation
 from src.engine.scene.transformation.linear_transformation import LinearTransformation
+from src.engine.scene.transformation.transformation import Transformation
+from src.error.transformation_error import TransformationError
 from src.input.NetCDF import read_info
 from test.test_case import ProgramTestCase
+
+
+class TestTransformation(ProgramTestCase):
+
+    def setUp(self) -> None:
+        """
+        Code executed before every test on the testcase.
+        """
+        super().setUp()
+        warnings.simplefilter('ignore', DeprecationWarning)
+
+    def test_non_existent_model(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        polygon = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 20)
+
+        transformation = Transformation('Non Existent Model',
+                                        self.engine.get_active_polygon_id())
+
+        with self.assertRaises(TransformationError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+
+        self.assertEqual(12, e.exception.code, 'Error code is not 12.')
+
+    def test_not_specified_model(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        polygon = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 20)
+
+        # noinspection PyTypeChecker
+        transformation = Transformation(None,
+                                        self.engine.get_active_polygon_id())
+
+        with self.assertRaises(TransformationError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+
+        self.assertEqual(10, e.exception.code, 'Error code is not 10.')
+
+    def test_non_existent_polygon(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        polygon = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 20)
+
+        transformation = Transformation(self.engine.get_active_model_id(),
+                                        'Non Existent polygon')
+
+        with self.assertRaises(TransformationError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+
+        self.assertEqual(13, e.exception.code, 'Error code is not 13.')
+
+    def test_not_specified_polygon(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        polygon = self.engine.create_new_polygon()
+
+        # noinspection PyTypeChecker
+        transformation = Transformation(self.engine.get_active_model_id(),
+                                        None)
+
+        with self.assertRaises(TransformationError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+        self.assertEqual(11, e.exception.code, 'Error code is not 11.')
 
 
 class TestLinearTransformation(ProgramTestCase):
@@ -100,6 +181,65 @@ class TestLinearTransformation(ProgramTestCase):
 
         os.remove('resources/test_resources/temp/temp_transformation_2.nc')
 
+    def test_bad_heights(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        polygon = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 20)
+
+        # noinspection PyTypeChecker
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              self.engine.get_active_polygon_id(),
+                                              500,
+                                              0)
+
+        with self.assertRaises(TransformationError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+
+        self.assertEqual(9, e.exception.code, 'Error code is not 9.')
+
+    def test_polygon_not_points(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        polygon = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon)
+
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              self.engine.get_active_polygon_id(),
+                                              0,
+                                              500)
+
+        with self.assertRaises(TransformationError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+
+        self.assertEqual(2, e.exception.code, 'Error code is not 2.')
+
+    def test_polygon_not_planar(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        polygon = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 20)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 20)
+
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              self.engine.get_active_polygon_id(),
+                                              0,
+                                              500)
+
+        with self.assertRaises(TransformationError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+
+        self.assertEqual(3, e.exception.code, 'Error code is not 3.')
+
 
 class TestFillNanTransformation(ProgramTestCase):
 
@@ -171,3 +311,37 @@ class TestFillNanTransformation(ProgramTestCase):
                                              'Info on the height matrix is not equal to the expected.')
 
         os.remove('resources/test_resources/temp/temp_transformation_3.nc')
+
+    def test_polygon_not_points(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        polygon = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon)
+
+        transformation = FillNanTransformation(self.engine.get_active_model_id(),
+                                               self.engine.get_active_polygon_id())
+
+        with self.assertRaises(TransformationError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+
+        self.assertEqual(2, e.exception.code, 'Error code is not 2.')
+
+    def test_polygon_not_planar(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/cpt_1.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        polygon = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 20)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 20)
+
+        transformation = FillNanTransformation(self.engine.get_active_model_id(),
+                                               self.engine.get_active_polygon_id())
+
+        with self.assertRaises(TransformationError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+
+        self.assertEqual(3, e.exception.code, 'Error code is not 3.')
