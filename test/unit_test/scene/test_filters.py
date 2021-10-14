@@ -31,7 +31,7 @@ from src.input.NetCDF import read_info
 from test.test_case import ProgramTestCase
 
 
-class TestContainsFilter(ProgramTestCase):
+class TestIsInFilter(ProgramTestCase):
 
     def setUp(self) -> None:
         """
@@ -39,35 +39,6 @@ class TestContainsFilter(ProgramTestCase):
         """
         super().setUp()
         warnings.simplefilter('ignore', category=DeprecationWarning)
-
-    def test_normal_application_is_not_in(self):
-        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
-                                           'resources/test_resources/netcdf/test_file_50_50.nc')
-
-        # load list of polygons
-        self.engine.create_polygon_from_file('resources/test_resources/polygons/shape_two_concentric_polygons.shp')
-
-        # apply transformation with filters
-        transformation = LinearTransformation(self.engine.get_active_model_id(),
-                                              'Polygon 0',
-                                              100,
-                                              200,
-                                              [IsNotIn('Polygon 1')])
-        self.engine.apply_transformation(transformation)
-
-        # export model to compare data
-        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
-                                           'resources/test_resources/temp/temp_filter_6')
-
-        # read data and compare
-        info_written = read_info('resources/test_resources/temp/temp_filter_6.nc')
-        info_expected = read_info('resources/test_resources/expected_data/netcdf/expected_filter_6.nc')
-
-        self.assertTrue((info_written[0] == info_expected[0]).all())
-        self.assertTrue((info_written[1] == info_expected[1]).all())
-        self.assertTrue((info_written[2] == info_expected[2]).all())
-
-        os.remove('resources/test_resources/temp/temp_filter_6.nc')
 
     def test_normal_application_is_in(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
@@ -112,7 +83,7 @@ class TestContainsFilter(ProgramTestCase):
                                               'Polygon 0',
                                               100,
                                               200,
-                                              [IsNotIn('Polygon 1')])
+                                              [IsIn('Polygon 1')])
         self.engine.apply_transformation(transformation)
 
         # export model to compare data
@@ -128,6 +99,45 @@ class TestContainsFilter(ProgramTestCase):
         self.assertTrue((info_written[2] == info_expected[2]).all())
 
         os.remove('resources/test_resources/temp/temp_is_in_filter_polygon_not_in_map.nc')
+
+
+class TestIsNotInFilter(ProgramTestCase):
+
+    def setUp(self) -> None:
+        """
+        Code executed before every test. Initializes a program to work with.
+        """
+        super().setUp()
+        warnings.simplefilter('ignore', category=DeprecationWarning)
+
+    def test_normal_application_is_not_in(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+
+        # load list of polygons
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/shape_two_concentric_polygons.shp')
+
+        # apply transformation with filters
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              'Polygon 0',
+                                              100,
+                                              200,
+                                              [IsNotIn('Polygon 1')])
+        self.engine.apply_transformation(transformation)
+
+        # export model to compare data
+        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
+                                           'resources/test_resources/temp/temp_filter_6')
+
+        # read data and compare
+        info_written = read_info('resources/test_resources/temp/temp_filter_6.nc')
+        info_expected = read_info('resources/test_resources/expected_data/netcdf/expected_filter_6.nc')
+
+        self.assertTrue((info_written[0] == info_expected[0]).all())
+        self.assertTrue((info_written[1] == info_expected[1]).all())
+        self.assertTrue((info_written[2] == info_expected[2]).all())
+
+        os.remove('resources/test_resources/temp/temp_filter_6.nc')
 
     def test_polygon_not_in_map_is_not_in_filter(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
@@ -161,7 +171,76 @@ class TestContainsFilter(ProgramTestCase):
         os.remove('resources/test_resources/temp/temp_is_in_filter_polygon_not_in_map.nc')
 
 
-class TestHeightFilter(ProgramTestCase):
+class TestGreaterThanFilter(ProgramTestCase):
+
+    def setUp(self) -> None:
+        """
+        Code executed before every test. Initializes a program to work with.
+        """
+        super().setUp()
+        warnings.simplefilter('ignore', category=DeprecationWarning)
+
+    def test_normal_application_greater_than(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+
+        # load polygon
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/shape_one_polygon_2.shp')
+
+        # create polygon to modify the scene.
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              self.engine.get_active_polygon_id(),
+                                              100,
+                                              200,
+                                              [HeightGreaterThan(50)])
+        self.engine.apply_transformation(transformation)
+
+        # export model to compare data
+        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
+                                           'resources/test_resources/temp/temp_filter_4')
+
+        # read data and compare
+        info_written = read_info('resources/test_resources/temp/temp_filter_4.nc')
+        info_expected = read_info('resources/test_resources/expected_data/netcdf/expected_filter_4.nc')
+
+        self.assertTrue((info_written[0] == info_expected[0]).all())
+        self.assertTrue((info_written[1] == info_expected[1]).all())
+        self.assertTrue((info_written[2] == info_expected[2]).all())
+
+        os.remove('resources/test_resources/temp/temp_filter_4.nc')
+
+    def test_polygon_not_in_map(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+
+        # load list of polygons
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/'
+                                             'shape_three_polygons_south_america.shp')
+
+        # apply transformation with filters
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              self.engine.get_active_polygon_id(),
+                                              100,
+                                              200,
+                                              [HeightGreaterThan(0)])
+        self.engine.apply_transformation(transformation)
+
+        # export model to compare data
+        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
+                                           'resources/test_resources/temp/temp_is_in_filter_polygon_not_in_map')
+
+        # read data and compare
+        info_written = read_info('resources/test_resources/temp/temp_is_in_filter_polygon_not_in_map.nc')
+        info_expected = read_info('resources/test_resources/netcdf/test_file_50_50.nc')
+
+        self.assertTrue((info_written[0] == info_expected[0]).all())
+        self.assertTrue((info_written[1] == info_expected[1]).all())
+        self.assertTrue((info_written[2] == info_expected[2]).all())
+
+        os.remove('resources/test_resources/temp/temp_is_in_filter_polygon_not_in_map.nc')
+
+
+class TestLessThanFilter(ProgramTestCase):
 
     def setUp(self) -> None:
         """
@@ -199,36 +278,7 @@ class TestHeightFilter(ProgramTestCase):
 
         os.remove('resources/test_resources/temp/temp_filter_3.nc')
 
-    def test_normal_application_greater_than(self):
-        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
-                                           'resources/test_resources/netcdf/test_file_50_50.nc')
-
-        # load polygon
-        self.engine.create_polygon_from_file('resources/test_resources/polygons/shape_one_polygon_2.shp')
-
-        # create polygon to modify the scene.
-        transformation = LinearTransformation(self.engine.get_active_model_id(),
-                                              self.engine.get_active_polygon_id(),
-                                              100,
-                                              200,
-                                              [HeightGreaterThan(50)])
-        self.engine.apply_transformation(transformation)
-
-        # export model to compare data
-        self.engine.export_model_as_netcdf(self.engine.get_active_model_id(),
-                                           'resources/test_resources/temp/temp_filter_4')
-
-        # read data and compare
-        info_written = read_info('resources/test_resources/temp/temp_filter_4.nc')
-        info_expected = read_info('resources/test_resources/expected_data/netcdf/expected_filter_4.nc')
-
-        self.assertTrue((info_written[0] == info_expected[0]).all())
-        self.assertTrue((info_written[1] == info_expected[1]).all())
-        self.assertTrue((info_written[2] == info_expected[2]).all())
-
-        os.remove('resources/test_resources/temp/temp_filter_4.nc')
-
-    def test_filters_not_in_map(self):
+    def test_polygon_not_in_map(self):
         self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
                                            'resources/test_resources/netcdf/test_file_50_50.nc')
 
@@ -241,8 +291,7 @@ class TestHeightFilter(ProgramTestCase):
                                               self.engine.get_active_polygon_id(),
                                               100,
                                               200,
-                                              [HeightGreaterThan(0),
-                                               HeightLessThan(3000)])
+                                              [HeightLessThan(3000)])
         self.engine.apply_transformation(transformation)
 
         # export model to compare data
