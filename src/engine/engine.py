@@ -346,6 +346,10 @@ class Engine:
                 self.set_modal_text('Error', 'Model not selected.')
             elif e.code == 11:
                 self.set_modal_text('Error', 'Polygon not selected.')
+            elif e.code == 12:
+                self.set_modal_text('Error', 'Model selected not found in the program.')
+            elif e.code == 13:
+                self.set_modal_text('Error', 'Polygon selected not found in the program.')
             else:
                 raise NotImplementedError(f'TransformationError with code {e.code} not handled.')
 
