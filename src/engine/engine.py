@@ -1509,7 +1509,7 @@ class Engine:
 
         Returns: None
         """
-        self.scene.delete_polygon_param(polygon_id, key)
+        self.scene.remove_polygon_param(polygon_id, key)
 
     def remove_polygon_by_id(self, polygon_id: str) -> None:
         """
@@ -1520,7 +1520,7 @@ class Engine:
 
         Returns: None
         """
-        self.scene.delete_polygon_by_id(polygon_id)
+        self.scene.remove_polygon_by_id(polygon_id)
 
     def reset_camera_values(self) -> None:
         """

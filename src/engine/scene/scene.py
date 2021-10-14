@@ -656,7 +656,7 @@ class Scene:
 
         return new_polygon_id
 
-    def delete_polygon_by_id(self, polygon_id: str) -> None:
+    def remove_polygon_by_id(self, polygon_id: str) -> None:
         """
         Delete the polygon with the specified id from the scene.
 
@@ -676,7 +676,7 @@ class Scene:
         if polygon_id in self.__polygon_draw_priority:
             self.__polygon_draw_priority.remove(polygon_id)
 
-    def delete_polygon_param(self, polygon_id: str, key: str) -> None:
+    def remove_polygon_param(self, polygon_id: str, key: str) -> None:
         """
         Delete a parameter from the polygon.
 
