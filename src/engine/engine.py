@@ -316,6 +316,17 @@ class Engine:
             if e.code == 0:
                 self.set_modal_text('Error',
                                     'Polygon in filter can not be None.')
+            elif e.code == 1:
+                self.set_modal_text('Error',
+                                    'Polygons used in filters must have at least 3 vertices.')
+            elif e.code == 2:
+                self.set_modal_text('Error',
+                                    'One of the polygons used in a filter is not simple/planar.')
+            elif e.code == 3:
+                self.set_modal_text('Error',
+                                    'Polygon not selected or invalid in filter.')
+            else:
+                raise NotImplementedError(f'FilterError with code {e.code} not handled.')
 
         except TransformationError as e:
             if e.code == 2:

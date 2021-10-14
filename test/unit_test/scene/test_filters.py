@@ -27,6 +27,7 @@ from src.engine.scene.filter.height_less_than import HeightLessThan
 from src.engine.scene.filter.is_in import IsIn
 from src.engine.scene.filter.is_not_in import IsNotIn
 from src.engine.scene.transformation.linear_transformation import LinearTransformation
+from src.error.filter_error import FilterError
 from src.input.NetCDF import read_info
 from test.test_case import ProgramTestCase
 
@@ -100,6 +101,81 @@ class TestIsInFilter(ProgramTestCase):
 
         os.remove('resources/test_resources/temp/temp_is_in_filter_polygon_not_in_map.nc')
 
+    def test_polygon_not_specified(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/'
+                                             'shape_three_polygons_south_america.shp')
+
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              'Polygon 0',
+                                              100,
+                                              200,
+                                              [IsIn(None)])
+        with self.assertRaises(FilterError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+        self.assertEqual(0, e.exception.code, 'Exception code is not 0')
+
+    def test_polygon_not_existent(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/'
+                                             'shape_three_polygons_south_america.shp')
+
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              'Polygon 0',
+                                              100,
+                                              200,
+                                              [IsIn('Another polygon not in the program.')])
+        with self.assertRaises(FilterError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+        self.assertEqual(3, e.exception.code, 'Exception code is not 3')
+
+    def test_polygon_not_planar(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/'
+                                             'shape_three_polygons_south_america.shp')
+
+        polygon_not_planar = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon_not_planar)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 20)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 20)
+
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              'Polygon 0',
+                                              100,
+                                              200,
+                                              [IsIn(polygon_not_planar)])
+        with self.assertRaises(FilterError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+        self.assertEqual(2, e.exception.code, 'Exception code is not 2.')
+
+    def test_polygon_not_enough_points(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/'
+                                             'shape_three_polygons_south_america.shp')
+
+        polygon_not_enough_points = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon_not_enough_points)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              'Polygon 0',
+                                              100,
+                                              200,
+                                              [IsIn(polygon_not_enough_points)])
+        with self.assertRaises(FilterError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+        self.assertEqual(1, e.exception.code, 'Exception code is not 1')
+
 
 class TestIsNotInFilter(ProgramTestCase):
 
@@ -169,6 +245,81 @@ class TestIsNotInFilter(ProgramTestCase):
         self.assertTrue((info_written[2] == info_expected[2]).all())
 
         os.remove('resources/test_resources/temp/temp_is_in_filter_polygon_not_in_map.nc')
+
+    def test_polygon_not_specified(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/'
+                                             'shape_three_polygons_south_america.shp')
+
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              'Polygon 0',
+                                              100,
+                                              200,
+                                              [IsNotIn(None)])
+        with self.assertRaises(FilterError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+        self.assertEqual(0, e.exception.code, 'Exception code is not 0')
+
+    def test_polygon_not_existent(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/'
+                                             'shape_three_polygons_south_america.shp')
+
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              'Polygon 0',
+                                              100,
+                                              200,
+                                              [IsNotIn('Another polygon not in the program.')])
+        with self.assertRaises(FilterError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+        self.assertEqual(3, e.exception.code, 'Exception code is not 3')
+
+    def test_polygon_not_planar(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/'
+                                             'shape_three_polygons_south_america.shp')
+
+        polygon_not_planar = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon_not_planar)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 10)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 20)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(20, 20)
+
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              'Polygon 0',
+                                              100,
+                                              200,
+                                              [IsNotIn(polygon_not_planar)])
+        with self.assertRaises(FilterError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+        self.assertEqual(2, e.exception.code, 'Exception code is not 2.')
+
+    def test_polygon_not_enough_points(self):
+        self.engine.create_model_from_file('resources/test_resources/cpt/colors_0_100_200.cpt',
+                                           'resources/test_resources/netcdf/test_file_50_50.nc')
+        self.engine.create_polygon_from_file('resources/test_resources/polygons/'
+                                             'shape_three_polygons_south_america.shp')
+
+        polygon_not_enough_points = self.engine.create_new_polygon()
+        self.engine.set_active_polygon(polygon_not_enough_points)
+        self.engine.add_new_vertex_to_active_polygon_using_real_coords(10, 10)
+
+        transformation = LinearTransformation(self.engine.get_active_model_id(),
+                                              'Polygon 0',
+                                              100,
+                                              200,
+                                              [IsNotIn(polygon_not_enough_points)])
+        with self.assertRaises(FilterError) as e:
+            transformation.initialize(self.engine.scene)
+            transformation.apply()
+        self.assertEqual(1, e.exception.code, 'Exception code is not 1')
 
 
 class TestGreaterThanFilter(ProgramTestCase):
