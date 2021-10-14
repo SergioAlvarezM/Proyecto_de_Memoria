@@ -687,7 +687,7 @@ class Scene:
         Returns: None
         """
         try:
-            self.__polygon_hash[polygon_id].delete_parameter(key)
+            self.__polygon_hash[polygon_id].remove_parameter(key)
         except KeyError:
             # noinspection PyTypeChecker
             raise SceneError(5)
