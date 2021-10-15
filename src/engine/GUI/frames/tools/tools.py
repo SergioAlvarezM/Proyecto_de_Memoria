@@ -78,7 +78,7 @@ class Tools(Frame):
         """
         Show the visualization tools on the frame.
         """
-        self._GUI_manager.set_font(Font.TOOL_SUB_TITLE)
+        self._GUI_manager.set_font(Font.TOOL_TITLE)
         imgui.text("Visualization Tools")
         self._GUI_manager.set_font(Font.REGULAR)
 

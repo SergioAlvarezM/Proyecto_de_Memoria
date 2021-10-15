@@ -573,7 +573,7 @@ class PolygonTools:
         """
         Show the polygon tools on the frame
         """
-        self.__GUI_manager.set_font(Font.TOOL_SUB_TITLE)
+        self.__GUI_manager.set_font(Font.TOOL_TITLE)
         imgui.text("Polygon Tools")
         self.__GUI_manager.set_font(Font.REGULAR)
 

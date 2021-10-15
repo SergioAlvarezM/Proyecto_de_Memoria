@@ -294,7 +294,7 @@ class ReliefTools:
         active_polygon_id = self.__gui_manager.get_active_polygon_id()
         active_model_id = self.__gui_manager.get_active_model_id()
 
-        self.__gui_manager.set_font(Font.TOOL_SUB_TITLE)
+        self.__gui_manager.set_font(Font.TOOL_TITLE)
         imgui.text('Relief Tools')
         self.__gui_manager.set_font(Font.REGULAR)
 
