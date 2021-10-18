@@ -75,7 +75,7 @@ class SubtractMap(MapTransformation):
         Returns: Vertices of the main model modified.
         """
         main_model_heights = self.__main_model_vertices[:, :, 2]
-        secondary_model_heights = self.__secondary_model_vertices[:, :, 2]
+        secondary_model_heights = np.nan_to_num(self.__secondary_model_vertices[:, :, 2])
 
         main_model_heights = main_model_heights - secondary_model_heights
         self.__main_model_vertices[:, :, 2] = main_model_heights
