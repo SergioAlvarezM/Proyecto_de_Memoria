@@ -24,7 +24,6 @@ src.engine.gui.frames.modal.ConfirmationModal -u-|> src.engine.gui.frames.modal.
 src.engine.gui.frames.modal.InterpolateNanMapModal -u-|> src.engine.gui.frames.modal.Modal
 src.engine.gui.frames.modal.TextModal -u-|> src.engine.gui.frames.modal.Modal
 src.engine.gui.frames.modal.ConvolveNanModal -u-|> src.engine.gui.frames.modal.Modal
-src.engine.gui.frames.modal.ConfirmationModal -u-|> src.engine.gui.frames.modal.Modal
 src.engine.gui.frames.modal.PolygonParameterModal -u-|> src.engine.gui.frames.modal.Modal
 !endsub
 
