@@ -113,7 +113,6 @@ class PolygonInformation(Frame):
                     # Edit parameter option
                     imgui.selectable('Edit')
                     if imgui.is_item_clicked():
-                        parameter_to_edit = (parameter[0], parameter[1])
                         polygon_parameter_modal = PolygonParameterModal(self._GUI_manager,
                                                                         self._GUI_manager.get_active_polygon_id(),
                                                                         parameter)

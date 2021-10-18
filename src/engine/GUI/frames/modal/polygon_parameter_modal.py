@@ -51,8 +51,6 @@ class PolygonParameterModal(Modal):
         self.__key_string_value = 'Name'
         self.__value_string_value = 'Value'
 
-        self.__should_open_add_dialog = False
-
         self.__parameters_type_list = ['Text', 'Number', 'Boolean']  # these are the variable types 0, 1 and 2
         self.__current_variable_type = 0
         self.__current_bool_selected = 0
